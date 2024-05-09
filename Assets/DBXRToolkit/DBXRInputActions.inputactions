@@ -1,0 +1,291 @@
+{
+    "name": "DBXRInputActions",
+    "maps": [
+        {
+            "name": "Main",
+            "id": "c91f388a-6568-4fa1-bcf7-8c5784017865",
+            "actions": [
+                {
+                    "name": "TriggerLeft",
+                    "type": "Value",
+                    "id": "5a97ecf4-508f-40f7-91e3-bba1f684aa46",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerRight",
+                    "type": "Value",
+                    "id": "3518fea5-feb7-459b-9049-a3724fe79099",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "GripLeft",
+                    "type": "Value",
+                    "id": "079b9975-7971-4740-a232-16fbe846a87d",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "GripRight",
+                    "type": "Value",
+                    "id": "0670249d-66e4-4ea6-af65-d093e2ab6978",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PrimaryButtonLeft",
+                    "type": "Button",
+                    "id": "fbed7e11-b699-4d04-ae4a-c09c48d7b9dc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PrimaryButtonRight",
+                    "type": "Button",
+                    "id": "fc891e49-17f0-4202-82f7-afa9951cf56f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryButtonLeft",
+                    "type": "Button",
+                    "id": "bf3e611a-8143-4621-afaf-71184d999f89",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryButtonRight",
+                    "type": "Button",
+                    "id": "3cf23acd-b38d-436d-a6a3-acffab695408",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Primary2DAxisLeft",
+                    "type": "Value",
+                    "id": "46da5d59-eddd-4af9-a8c3-b1a8c4939eaf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Primary2DAxisRight",
+                    "type": "Value",
+                    "id": "a656ac3d-7c35-4ef3-ab6d-8894d7ddb5b5",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Secondary2DAxisLeft",
+                    "type": "Value",
+                    "id": "cff041f3-507f-4e50-a652-364889f368b0",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Secondary2DAxisRight",
+                    "type": "Value",
+                    "id": "a5a13cde-8c78-40cf-8a4b-01796ac5b6df",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "HandPosLeft",
+                    "type": "Button",
+                    "id": "00a8f220-3dd0-433a-8e92-83c462e6e6ab",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a1ae85a7-065b-44aa-875c-d5e9254a31ee",
+                    "path": "<XRController>{LeftHand}/{secondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "SecondaryButtonLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "979a829e-e422-407e-85fe-f386cb5a26a8",
+                    "path": "<XRController>{RightHand}/{secondary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "Secondary2DAxisRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d98e9663-370e-44cc-ac5c-eaa2c8809722",
+                    "path": "<XRController>{LeftHand}/{trigger}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "76644ca8-7d6b-48cb-a41e-25291adc6fd1",
+                    "path": "<XRController>{RightHand}/{trigger}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "TriggerRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "91f39268-3f20-4e2c-ba9b-1993b10995e9",
+                    "path": "<XRController>{RightHand}/{grip}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "GripRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "969a7ac1-51d0-49c3-8301-dcab60b68401",
+                    "path": "<XRController>{LeftHand}/{grip}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "GripLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e9fd10f-7974-4c9d-9ab6-4b9b3152d956",
+                    "path": "<XRController>{RightHand}/{primaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "PrimaryButtonRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e91bd398-44c3-4aa7-9e49-569c6c0bf77f",
+                    "path": "<XRController>{LeftHand}/{primaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "PrimaryButtonLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "24cc81d2-3cb7-40f2-8243-9e560ded46cb",
+                    "path": "<XRController>{RightHand}/{secondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "SecondaryButtonRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9b8e802c-06b1-49d6-ba98-10837031cfb6",
+                    "path": "<XRController>{RightHand}/{primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "Primary2DAxisRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b488f178-f5aa-4379-af12-bb920e58c50f",
+                    "path": "<XRController>{LeftHand}/{primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "Primary2DAxisLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69435120-061a-4ac2-bc56-1cc9b1475285",
+                    "path": "<XRController>{LeftHand}/{secondary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "Secondary2DAxisLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95902cf7-2410-422c-ac35-ed3a27cb588d",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HandPosLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "XR Usage",
+            "bindingGroup": "XR Usage",
+            "devices": [
+                {
+                    "devicePath": "<XRController>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<XRController>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
