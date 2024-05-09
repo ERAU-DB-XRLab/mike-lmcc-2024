@@ -6,7 +6,10 @@ using UnityEngine.XR;
 
 public class LMCCMenuBox : MonoBehaviour
 {
+    [SerializeField] private bool invertGrabPoint = false;
     private const float menuPositionOffset = 400f;
+
+    public Image Image { get { return image; } }
 
     private LMCCMenu currentMenu;
     private Image image;
@@ -22,8 +25,6 @@ public class LMCCMenuBox : MonoBehaviour
         LMCCMenu menu = other.gameObject.GetComponent<LMCCMenu>();
         if (menu != null && currentMenu == null)
         {
-            Debug.Log(other.name + " entered");
-
             menu.GetComponent<MenuComponent>().OnUIDropped += FillMenuBox;
             image.CrossFadeAlpha(1.5f, 0.1f, false);
         }
@@ -37,16 +38,15 @@ public class LMCCMenuBox : MonoBehaviour
         {
             menu.GetComponent<MenuComponent>().OnUIDropped -= FillMenuBox;
 
-            if (currentMenu == null)
-            {
-                Debug.Log(other.name + " exited");
-            }
-            else if (menu == currentMenu)
+            if (menu == currentMenu)
             {
                 currentMenu = null;
             }
 
-            image.CrossFadeAlpha(1f, 0.1f, false);
+            if (currentMenu == null)
+            {
+                image.CrossFadeAlpha(1f, 0.1f, false);
+            }
         }
     }
 
@@ -54,10 +54,21 @@ public class LMCCMenuBox : MonoBehaviour
     {
         if (currentMenu == null)
         {
-            Debug.Log("Filling menu box");
             currentMenu = component.GetComponent<LMCCMenu>();
             currentMenu.transform.SetParent(this.transform);
-            currentMenu.transform.SetLocalPositionAndRotation(Vector3.up * menuPositionOffset, Quaternion.identity);
+
+            if (invertGrabPoint)
+            {
+
+                currentMenu.transform.SetLocalPositionAndRotation(Vector3.down * menuPositionOffset, Quaternion.identity);
+                component.InvertGrabPoint(true);
+            }
+            else
+            {
+                currentMenu.transform.SetLocalPositionAndRotation(Vector3.up * menuPositionOffset, Quaternion.identity);
+                component.InvertGrabPoint(false);
+            }
+
             image.CrossFadeAlpha(0f, 0.1f, false);
         }
     }

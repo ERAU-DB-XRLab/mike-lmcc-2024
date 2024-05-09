@@ -9,6 +9,7 @@ public class DBXRResources : MonoBehaviour
 
     [Header("Layer Info")]
     [SerializeField] private LayerMask interactLayerMask;
+    [SerializeField] private LayerMask staticLayerMask;
     [SerializeField] private int interactLayer;
     [SerializeField] private int uiLayer;
 
@@ -20,6 +21,7 @@ public class DBXRResources : MonoBehaviour
 
     // Layer Info
     public LayerMask InteractLayerMask { get { return interactLayerMask; } }
+    public LayerMask StaticLayerMask { get { return staticLayerMask; } }
     public int InteractLayer { get { return interactLayer; } }
     public int UILayer { get { return uiLayer; } }
 

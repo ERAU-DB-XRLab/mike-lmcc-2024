@@ -7,8 +7,12 @@ public class LMCCMenuSpawner : MonoBehaviour
 {
     public static LMCCMenuSpawner Main { get; private set; }
 
+    public List<LMCCMenuBox> MenuBoxes { get { return menuBoxes; } }
+    public List<LMCCMenu> Menus { get { return menus; } }
+
     [SerializeField] private Transform menuSpawnLoc;
     [SerializeField] private Transform menuCacheLoc;
+    [SerializeField] private List<LMCCMenuBox> menuBoxes;
     [SerializeField] private List<LMCCMenu> menus;
 
     void Awake()
@@ -17,6 +21,16 @@ public class LMCCMenuSpawner : MonoBehaviour
             Main = this;
         else
             Destroy(this);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Hide all menu boxes on start
+        foreach (LMCCMenuBox box in menuBoxes)
+        {
+            box.Image.CrossFadeAlpha(0f, 0f, true);
+        }
     }
 
     public LMCCMenu ToggleMenu(int menuIndex)
@@ -62,5 +76,16 @@ public class LMCCMenuSpawner : MonoBehaviour
             menu.transform.position = menuCacheLoc.position;
         });
         return menu;
+    }
+
+    public void DisplayMenuBoxes(bool display)
+    {
+        foreach (LMCCMenuBox box in menuBoxes)
+        {
+            if (display)
+                box.Image.CrossFadeAlpha(1f, 0.1f, true);
+            else
+                box.Image.CrossFadeAlpha(0f, 0.1f, true);
+        }
     }
 }

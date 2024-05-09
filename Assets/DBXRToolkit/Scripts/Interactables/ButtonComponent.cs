@@ -25,6 +25,10 @@ public class ButtonComponent : InteractableComponent
         unpressedPos = buttonObj.localPosition;
         pressedPos = buttonObj.localPosition + (GetPressVector() * pressAmount);
         desiredPos = unpressedPos;
+
+        PointerEntered.AddListener(PointerEnter);
+        PointerExited.AddListener(PointerExit);
+
     }
 
     void Update()
@@ -32,12 +36,12 @@ public class ButtonComponent : InteractableComponent
         buttonObj.localPosition = Vector3.SmoothDamp(buttonObj.localPosition, desiredPos, ref refVel, 0.025f);
     }
 
-    public override void PointerEntered(HandInteract interact)
+    public virtual void PointerEnter(HandInteract interact)
     {
         ChangePointerCount(1);
     }
 
-    public override void PointerExited(HandInteract interact)
+    public virtual void PointerExit(HandInteract interact)
     {
         ChangePointerCount(-1);
     }
@@ -47,7 +51,7 @@ public class ButtonComponent : InteractableComponent
 
         pointerCount += change;
 
-        if(!toggle)
+        if (!toggle)
         {
             if (pressed && pointerCount == 0)
             {
@@ -62,18 +66,20 @@ public class ButtonComponent : InteractableComponent
                 desiredPos = pressedPos;
                 ValueChanged.Invoke(pressed);
             }
-        } else
+        }
+        else
         {
-            if(pointerCount > 0 && reset)
+            if (pointerCount > 0 && reset)
             {
 
                 reset = false;
                 pressed = !pressed;
 
-                if(pressed)
+                if (pressed)
                 {
                     desiredPos = pressedPos;
-                } else
+                }
+                else
                 {
                     desiredPos = unpressedPos;
                 }
@@ -83,7 +89,7 @@ public class ButtonComponent : InteractableComponent
             }
         }
 
-        if(pointerCount == 0)
+        if (pointerCount == 0)
         {
             reset = true;
         }

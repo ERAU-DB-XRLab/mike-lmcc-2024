@@ -42,13 +42,19 @@ public class PushLeverComponent : InteractableComponent
     public override void Grab(HandInteract interact)
     {
         currentHand = interact.GetHandTransform();
-        interact.SetHandOverride(clampPos);
+        if (interact is HandControllerInteract)
+        {
+            ((HandControllerInteract)interact).SetHandOverride(clampPos);
+        }
     }
 
     public override void Drop(HandInteract interact)
     {
         currentHand = null;
-        interact.SetHandOverride(null);
+        if (interact is HandControllerInteract)
+        {
+            ((HandControllerInteract)interact).SetHandOverride(null);
+        }
     }
 
     public float GetValue()

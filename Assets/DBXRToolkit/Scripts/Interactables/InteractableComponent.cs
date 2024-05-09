@@ -2,21 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InteractableComponent : MonoBehaviour
 {
+
+    [HideInInspector]
+    public UnityEvent<HandInteract> Grabbed, Dropped, InteractStarted, InteractStopped, HandEntered, HandExited, PointerEntered, PointerExited, RayEntered, RayExited;
+
     [SerializeField] protected Vector3 pos, rot;
     [SerializeField] protected bool grabbable = true;
-
-    protected Rigidbody rb;
-
-    protected Transform cachedParent;
-
+    
     protected bool held = false;
+    protected Rigidbody rb;
 
     protected void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        Grabbed.AddListener(Grab);
+        Dropped.AddListener(Drop);
     }
 
     public virtual void Grab(HandInteract interact)
@@ -24,7 +28,6 @@ public class InteractableComponent : MonoBehaviour
 
         rb.isKinematic = true;
 
-        cachedParent = transform.parent;
         transform.SetParent(interact.GetHandTransform(), true);
         transform.localPosition = pos;
         transform.localRotation = Quaternion.Euler(rot);
@@ -36,8 +39,7 @@ public class InteractableComponent : MonoBehaviour
     public virtual void Drop(HandInteract interact)
     {
 
-        //transform.SetParent(null);
-        transform.SetParent(cachedParent);
+        transform.SetParent(null);
 
         rb.isKinematic = false;
         rb.velocity = interact.GetVelocity() * DBXRResources.Main.ThrowSpeedMultiplier;
@@ -46,34 +48,9 @@ public class InteractableComponent : MonoBehaviour
 
     }
 
-    public virtual void InteractStart(HandInteract interact)
+    public Rigidbody GetRB()
     {
-        //
-    }
-
-    public virtual void InteractStop(HandInteract interact)
-    {
-        //
-    }
-
-    public virtual void HandEntered(HandInteract interact)
-    {
-        //
-    }
-
-    public virtual void HandExited(HandInteract interact)
-    {
-        //
-    }
-
-    public virtual void PointerEntered(HandInteract interact)
-    {
-        //
-    }
-
-    public virtual void PointerExited(HandInteract interact)
-    {
-        //
+        return rb;
     }
 
     public bool IsGrabbable()
@@ -84,11 +61,6 @@ public class InteractableComponent : MonoBehaviour
     public bool IsHeld()
     {
         return held;
-    }
-
-    public Rigidbody GetRB()
-    {
-        return rb;
     }
 
 }

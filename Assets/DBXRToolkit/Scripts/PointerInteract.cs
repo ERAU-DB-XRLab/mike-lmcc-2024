@@ -19,7 +19,7 @@ public class PointerInteract : MonoBehaviour
             InteractableComponent ic = other.gameObject.GetComponent<InteractableComponent>();
             if(ic)
             {
-                ic.PointerEntered(interact);
+                ic.PointerEntered.Invoke(interact);
             }
         } else
         if(other.gameObject.layer == DBXRResources.Main.UILayer)
@@ -39,7 +39,7 @@ public class PointerInteract : MonoBehaviour
             InteractableComponent ic = other.gameObject.GetComponent<InteractableComponent>();
             if(ic)
             {
-                ic.PointerExited(interact);
+                ic.PointerExited.Invoke(interact);
             }
         } else
         if (other.gameObject.layer == DBXRResources.Main.UILayer)

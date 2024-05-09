@@ -13,6 +13,8 @@ public class MenuComponent : InteractableComponent
     private Vector3 posOffset;
     private Vector3 rotOffset;
 
+    private const float centralBoxOffset = -315f;
+
     public override void Grab(HandInteract interact)
     {
         matchedTrasform = interact.GetHandTransform();
@@ -20,6 +22,8 @@ public class MenuComponent : InteractableComponent
         rotOffset = interact.GetHandTransform().eulerAngles - transform.eulerAngles;
         held = true;
         OnUIGrabbed?.Invoke(this, interact);
+
+        InvertGrabPoint(false);
     }
 
     public override void Drop(HandInteract interact)
@@ -27,6 +31,11 @@ public class MenuComponent : InteractableComponent
         matchedTrasform = null;
         held = false;
         OnUIDropped?.Invoke(this, interact);
+    }
+
+    public void InvertGrabPoint(bool invert)
+    {
+        transform.GetChild(0).SetLocalPositionAndRotation(invert ? Vector3.up * -centralBoxOffset : Vector3.up * centralBoxOffset, Quaternion.identity);
     }
 
     // Update is called once per frame

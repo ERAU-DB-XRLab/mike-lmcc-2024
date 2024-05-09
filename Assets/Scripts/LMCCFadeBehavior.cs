@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class FadeBehavior : MonoBehaviour
+public class LMCCFadeBehavior : MonoBehaviour
 {
     [SerializeField] private bool startVisible = false;
 
@@ -14,7 +14,7 @@ public class FadeBehavior : MonoBehaviour
     protected virtual void Awake()
     {
         graphics = new List<MaskableGraphic>();
-        foreach (MaskableGraphic graphic in GetComponentsInChildren<MaskableGraphic>())
+        foreach (MaskableGraphic graphic in GetComponentsInChildren<MaskableGraphic>(false))
         {
             graphics.Add(graphic);
 

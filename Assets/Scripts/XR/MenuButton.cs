@@ -7,24 +7,28 @@ public class MenuButton : ButtonComponent
 {
     [SerializeField] private Image highlightImage;
 
-    private float highlightAlpha;
-
     // Start is called before the first frame update
     void Start()
     {
-        highlightAlpha = highlightImage.color.a;
         highlightImage.CrossFadeAlpha(0, 0, true);
     }
 
-    public override void PointerEntered(HandInteract interact)
+    void OnEnable()
     {
-        base.PointerEntered(interact);
-        highlightImage.CrossFadeAlpha(highlightAlpha, 0.1f, true);
+        highlightImage.gameObject.SetActive(false);
     }
 
-    public override void PointerExited(HandInteract interact)
+    public override void PointerEnter(HandInteract interact)
     {
-        base.PointerExited(interact);
+        base.PointerEnter(interact);
+        highlightImage.gameObject.SetActive(true);
+        highlightImage.CrossFadeAlpha(0, 0, true);
+        highlightImage.CrossFadeAlpha(1f, 1f, true);
+    }
+
+    public override void PointerExit(HandInteract interact)
+    {
+        base.PointerExit(interact);
         highlightImage.CrossFadeAlpha(0, 0.1f, true);
     }
 }

@@ -71,11 +71,17 @@ public class YokeComponent : InteractableComponent
             float rightDist = Vector3.SqrMagnitude(clampPosRight.position - interact.GetHandTransform().position);
             if(leftDist < rightDist)
             {
-                interact.SetHandOverride(clampPosLeft);
+                if (interact is HandControllerInteract)
+                {
+                    ((HandControllerInteract)interact).SetHandOverride(clampPosLeft);
+                }
                 primaryClampPos = clampPosLeft;
             } else 
             {
-                interact.SetHandOverride(clampPosRight);
+                if (interact is HandControllerInteract)
+                {
+                    ((HandControllerInteract)interact).SetHandOverride(clampPosRight);
+                }
                 primaryClampPos = clampPosRight;
             }
         } else 
@@ -83,11 +89,17 @@ public class YokeComponent : InteractableComponent
             secondaryHand = interact;
             if(primaryClampPos == clampPosLeft)
             {
-                interact.SetHandOverride(clampPosRight);
+                if (interact is HandControllerInteract)
+                {
+                    ((HandControllerInteract)interact).SetHandOverride(clampPosRight);
+                }
                 secondaryClampPos = clampPosRight;
             } else 
             {
-                interact.SetHandOverride(clampPosLeft);
+                if (interact is HandControllerInteract)
+                {
+                    ((HandControllerInteract)interact).SetHandOverride(clampPosLeft);
+                }
                 secondaryClampPos = clampPosLeft;
             }
         }
@@ -100,22 +112,37 @@ public class YokeComponent : InteractableComponent
         {
             primaryHand = null;
             primaryClampPos = null;
-            interact.SetHandOverride(null);
+            if (interact is HandControllerInteract)
+            {
+                ((HandControllerInteract)interact).SetHandOverride(null);
+            }
         } else 
         {
             if(interact == primaryHand)
             {
-                primaryHand.SetHandOverride(null);
+
+                if (interact is HandControllerInteract)
+                {
+                    ((HandControllerInteract)interact).SetHandOverride(null);
+                }
+
                 primaryHand = secondaryHand;
                 primaryClampPos = secondaryClampPos;
-                primaryHand.SetHandOverride(primaryClampPos);
+
+                if (primaryHand is HandControllerInteract)
+                {
+                    ((HandControllerInteract)primaryHand).SetHandOverride(primaryClampPos);
+                }
 
                 secondaryHand = null;
                 secondaryClampPos = null;
 
             } else 
             {
-                secondaryHand.SetHandOverride(null);
+                if (secondaryHand is HandControllerInteract)
+                {
+                    ((HandControllerInteract)secondaryHand).SetHandOverride(null);
+                }
                 secondaryHand = null;
                 secondaryClampPos = null;
             }

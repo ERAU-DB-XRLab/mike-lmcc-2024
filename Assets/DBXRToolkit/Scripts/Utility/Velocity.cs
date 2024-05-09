@@ -15,7 +15,7 @@ public class Velocity : MonoBehaviour
         Vector3 vel = (transform.position - posLastFrame) / Time.deltaTime;
         velocities.Enqueue(vel);
 
-        if(velocities.Count > 10)
+        if(velocities.Count > 2)
         {
             velocities.Dequeue();
         }

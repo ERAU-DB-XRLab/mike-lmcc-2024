@@ -69,18 +69,15 @@ public class MIKEServerManager : MonoBehaviour
 
     void Update()
     {
-
         if (dataToReceive.Count > 0)
         {
             MIKEInputManager.Main.ReceiveInput(dataToReceive.Dequeue());
 
             if (dataToReceive.Count > 40)
             {
-                dataToReceive.Clear();
+                dataToReceive.Clear(); // POTENTIAL ISSUE/RACE CONDITION HERE, IF DATA IS ENQUEUED IN THE TASK ABOVE AND THEN CLEARED HERE DATA WILL BE LOST. NEEDS TO BE TESTED
             }
-
         }
-
     }
 
     public void SendData(ServiceType type, byte[] data)
@@ -112,6 +109,7 @@ public class MIKEServerManager : MonoBehaviour
         StartCoroutine(SendDataCoroutine(type, data));
     }
 
+    // Sends the packet multiple times to make sure it is received, I know this is stupid but I simply don't give a shit
     private IEnumerator SendDataCoroutine(ServiceType type, byte[] data)
     {
         int count = 0;
@@ -123,5 +121,4 @@ public class MIKEServerManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
-
 }
