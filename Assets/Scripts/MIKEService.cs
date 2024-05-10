@@ -12,6 +12,6 @@ public abstract class MIKEService : MonoBehaviour
 {
     public ServiceType Service { get; protected set; }
     public bool IsReliable { get; protected set; }
-    public abstract void ReceiveData(byte[] data);
+    public abstract void ReceiveData(MIKEPacket packet);
 
 }

@@ -23,20 +23,15 @@ public class MIKEHUDAudioService : MIKEService
         MIKEInputManager.Main.RegisterService(Service, this);
     }
 
-    public override void ReceiveData(byte[] data)
+    public override void ReceiveData(MIKEPacket packet)
     {
-        List<byte> dataAsList = data.ToList();
-
-        // remove device ID byte
-        dataAsList.RemoveAt(0);
-
         if (!parsing)
         {
             parsing = true;
             firstPacketTime = Time.realtimeSinceStartup;
         }
 
-        mainData.AddRange(dataAsList);
+        mainData.AddRange(packet.UnreadByteArray);
 
         //if (packetsParsed >= packetCount)
         //{

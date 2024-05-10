@@ -50,7 +50,8 @@ public class LMCCWaypointSpawner : MonoBehaviour
     // Spawn a new HUD waypoint at a specific position
     public void SpawnNewHUDWaypoint(int waypointID, Vector3 position)
     {
-        LMCCWaypoint hudWaypoint = Instantiate(waypointPrefab, MIKEMap.Main.transform).GetComponent<LMCCWaypoint>();
+        LMCCWaypoint hudWaypoint = Instantiate(waypointPrefab, this.transform).GetComponent<LMCCWaypoint>();
+        hudWaypoint.transform.SetParent(MIKEMap.Main.transform);
         hudWaypoint.WaypointID = waypointID;
         hudWaypoint.transform.position = position;
 

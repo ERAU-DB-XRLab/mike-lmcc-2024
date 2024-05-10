@@ -46,16 +46,21 @@ public class LMCCWaypoint : MonoBehaviour
 
         GetComponent<MenuComponent>().OnUIDropped += (component, interact) =>
         {
+            // If the waypoint was already placed and is getting redropped
             if (Placed)
             {
                 LMCCNavBar.Main.Show();
                 LMCCWaypointSpawner.Main.gameObject.SetActive(true);
             }
 
-            SendToHUD();
-
             if (!Hovering)
             {
+                // If the waypoint was already placed and is getting deleted
+                if (Placed)
+                {
+                    SendToHUD();
+                }
+
                 Destroy(gameObject);
             }
         };
@@ -99,9 +104,6 @@ public class LMCCWaypoint : MonoBehaviour
     {
         GetComponent<MenuComponent>().OnUIDropped -= DropWaypoint;
         DisableHitMarkers();
-
-        Grabbed = false;
-        Hovering = false;
         hitMap = false;
 
         transform.SetParent(MIKEMap.Main.transform);
@@ -117,17 +119,19 @@ public class LMCCWaypoint : MonoBehaviour
         // SEND IT TO THE HUD
         SendToHUD();
 
+        Grabbed = false;
+        Hovering = false;
         Placed = true;
     }
 
     public void SendToHUD()
     {
-        List<byte> byteList = new List<byte>();
-        byteList.AddRange(BitConverter.GetBytes(WaypointID));
+        var packet = new MIKEPacket();
+        packet.Write(WaypointID);
 
         if (Placed && !Hovering)
         {
-            byteList.Add((byte)'D'); // Existing waypoint was deleted
+            packet.InsertAtStart((int)WaypointServiceType.Delete); // Existing waypoint was deleted
         }
         else
         {
@@ -135,18 +139,18 @@ public class LMCCWaypoint : MonoBehaviour
 
             if (Placed)
             {
-                byteList.Add((byte)'M'); // Existing waypoint was moved
+                packet.InsertAtStart((int)WaypointServiceType.Move); // Existing waypoint was moved
             }
             else
             {
-                byteList.Add((byte)'C'); // New waypoint was created
+                packet.InsertAtStart((int)WaypointServiceType.Create); // New waypoint was created
             }
 
-            byteList.AddRange(BitConverter.GetBytes(normalizedPos.x));
-            byteList.AddRange(BitConverter.GetBytes(normalizedPos.y));
+            packet.Write(normalizedPos.x);
+            packet.Write(normalizedPos.y);
         }
 
-        MIKEServerManager.Main.SendDataReliably(ServiceType.Waypoint, byteList.ToArray());
+        MIKEServerManager.Main.SendDataReliably(ServiceType.Waypoint, packet);
     }
 
     private void ResetWaypoint()
