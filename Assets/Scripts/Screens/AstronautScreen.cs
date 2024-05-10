@@ -14,6 +14,11 @@ public class AstronautScreen : LMCCScreen
         TSSManager.Main.OnIMUUpdated += UpdateIMU;
     }
 
+    void OnEnable()
+    {
+        UpdateIMU(TSSManager.Main.IMUData);
+    }
+
     private void UpdateIMU(IMUData data)
     {
         astroX.SetValue((float)data.posx, MIKEResources.Main.PositiveNotificationColor);

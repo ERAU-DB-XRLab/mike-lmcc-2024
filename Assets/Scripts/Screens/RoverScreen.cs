@@ -24,6 +24,11 @@ public class RoverScreen : LMCCScreen
         TSSManager.Main.OnRoverUpdated += UpdateRover;
     }
 
+    void OnEnable()
+    {
+        UpdateRover(TSSManager.Main.RoverData);
+    }
+
     private void UpdateRover(RoverData data)
     {
         roverX.SetValue((float)data.posx, MIKEResources.Main.PositiveNotificationColor);

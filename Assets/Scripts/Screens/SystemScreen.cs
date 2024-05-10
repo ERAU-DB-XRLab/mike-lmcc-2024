@@ -24,9 +24,7 @@ public class SystemScreen : LMCCScreen
 
     void OnEnable()
     {
-        //if (TSSManager.Main.DCUData != null)
         UpdateDCU(TSSManager.Main.DCUData);
-        //if (TSSManager.Main.CommData != null)
         UpdateComm(TSSManager.Main.CommData);
     }
 

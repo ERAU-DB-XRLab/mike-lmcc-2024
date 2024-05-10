@@ -246,8 +246,8 @@ RectTransform:
   m_LocalScale: {x: 1.4000003, y: 1.4000002, z: 1.4000003}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1351704124659349992}
   - {fileID: 6191361514686966081}
+  - {fileID: 1351704124659349992}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startVisible: 0
+  titleText: {fileID: 888778083816236526}
   currentScreen: {fileID: 0}
 --- !u!114 &6495947648724436065
 MonoBehaviour:

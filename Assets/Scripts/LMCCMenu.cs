@@ -11,17 +11,20 @@ public class LMCCMenu : LMCCFadeBehavior
         set { currentScreen = value; }
     }
 
-    private TMP_Text titleText;
+    [SerializeField] private TMP_Text titleText;
+    [SerializeField] private LMCCScreen currentScreen;
+
     private MenuComponent currentComponent;
 
-    [SerializeField] private LMCCScreen currentScreen;
+    protected override void Awake()
+    {
+        base.Awake();
+        currentComponent = GetComponent<MenuComponent>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        currentComponent = GetComponent<MenuComponent>();
-        titleText = GetComponentInChildren<TMP_Text>();
-
         currentComponent.OnUIGrabbed += GrabbedMenu;
         currentComponent.OnUIDropped += DroppedMenu;
     }
@@ -34,6 +37,7 @@ public class LMCCMenu : LMCCFadeBehavior
     public void GrabbedMenu(MenuComponent component, HandInteract interact)
     {
         LMCCMenuSpawner.Main.DisplayMenuBoxes(true);
+        component.InvertGrabPoint(false);
     }
 
     public void DroppedMenu(MenuComponent component, HandInteract interact)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
@@ -10,12 +11,13 @@ public class LMCCMenuBox : MonoBehaviour
     private const float menuPositionOffset = 400f;
 
     public Image Image { get { return image; } }
+    public LMCCMenu CurrentMenu { get { return currentMenu; } set { currentMenu = value; } }
 
-    private LMCCMenu currentMenu;
+    [Header("For Debugging, keep this null")]
+    [SerializeField] private LMCCMenu currentMenu;
     private Image image;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         image = GetComponent<Image>();
     }
@@ -25,8 +27,8 @@ public class LMCCMenuBox : MonoBehaviour
         LMCCMenu menu = other.gameObject.GetComponent<LMCCMenu>();
         if (menu != null && currentMenu == null)
         {
-            menu.GetComponent<MenuComponent>().OnUIDropped += FillMenuBox;
-            image.CrossFadeAlpha(1.5f, 0.1f, false);
+            AddFillEvent(menu.GetComponent<MenuComponent>());
+            image.CrossFadeAlpha(2f, 0.1f, false);
         }
     }
 
@@ -36,7 +38,7 @@ public class LMCCMenuBox : MonoBehaviour
 
         if (menu != null)
         {
-            menu.GetComponent<MenuComponent>().OnUIDropped -= FillMenuBox;
+            RemoveFillEvent(menu.GetComponent<MenuComponent>());
 
             if (menu == currentMenu)
             {
@@ -50,6 +52,16 @@ public class LMCCMenuBox : MonoBehaviour
         }
     }
 
+    public void AddFillEvent(MenuComponent menu)
+    {
+        menu.OnUIDropped += FillMenuBox;
+    }
+
+    public void RemoveFillEvent(MenuComponent menu)
+    {
+        menu.OnUIDropped -= FillMenuBox;
+    }
+
     private void FillMenuBox(MenuComponent component, HandInteract interact)
     {
         if (currentMenu == null)
@@ -59,7 +71,6 @@ public class LMCCMenuBox : MonoBehaviour
 
             if (invertGrabPoint)
             {
-
                 currentMenu.transform.SetLocalPositionAndRotation(Vector3.down * menuPositionOffset, Quaternion.identity);
                 component.InvertGrabPoint(true);
             }

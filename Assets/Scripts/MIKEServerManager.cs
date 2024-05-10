@@ -6,11 +6,6 @@ using System.Net.Sockets;
 using System.Linq;
 using System.Collections;
 
-public enum ServiceType
-{
-    Message = 1,
-}
-
 public class MIKEServerManager : MonoBehaviour
 {
 
@@ -26,6 +21,7 @@ public class MIKEServerManager : MonoBehaviour
     private bool tasksRunning = true;
 
     private const int reliableSendCount = 30;
+    private int reliableCounter = 0;
 
     [SerializeField] private string otherIP;
     public string OtherIP { get { return otherIP; } set { otherIP = value; } }
@@ -33,7 +29,6 @@ public class MIKEServerManager : MonoBehaviour
     // Start TCP server
     void Awake()
     {
-
         Main = this;
 
         // Sending
@@ -58,7 +53,6 @@ public class MIKEServerManager : MonoBehaviour
                 }
             }
         });
-
     }
 
     void OnDisable()
@@ -82,7 +76,7 @@ public class MIKEServerManager : MonoBehaviour
 
     public void SendData(ServiceType type, byte[] data)
     {
-        int deviceID = (int)type;
+        int serviceID = (int)type;
         int packetSize = 65000;
         int byteTotal = data.Length;
 
@@ -90,10 +84,9 @@ public class MIKEServerManager : MonoBehaviour
 
         while (byteTotal > 0)
         {
-
             int count = byteTotal >= packetSize ? packetSize : byteTotal;
 
-            List<byte> dataToSend = new List<byte>() { (byte)deviceID };
+            List<byte> dataToSend = new List<byte>() { (byte)serviceID };
             dataToSend.AddRange(dataAsList.GetRange(0, count));
             dataAsList.RemoveRange(0, count);
 
@@ -106,7 +99,10 @@ public class MIKEServerManager : MonoBehaviour
 
     public void SendDataReliably(ServiceType type, byte[] data)
     {
-        StartCoroutine(SendDataCoroutine(type, data));
+        reliableCounter = (reliableCounter + 1) % 255;
+        List<byte> reliableDataToSend = new List<byte>() { (byte)reliableCounter };
+        reliableDataToSend.AddRange(data);
+        StartCoroutine(SendDataCoroutine(type, reliableDataToSend.ToArray()));
     }
 
     // Sends the packet multiple times to make sure it is received, I know this is stupid but I simply don't give a shit

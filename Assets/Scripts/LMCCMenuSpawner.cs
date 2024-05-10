@@ -7,6 +7,9 @@ public class LMCCMenuSpawner : MonoBehaviour
 {
     public static LMCCMenuSpawner Main { get; private set; }
 
+    public Transform MenuSpawnLoc { get { return menuSpawnLoc; } }
+    public Transform MenuCacheLoc { get { return menuCacheLoc; } }
+
     public List<LMCCMenuBox> MenuBoxes { get { return menuBoxes; } }
     public List<LMCCMenu> Menus { get { return menus; } }
 
@@ -35,14 +38,13 @@ public class LMCCMenuSpawner : MonoBehaviour
 
     public LMCCMenu ToggleMenu(int menuIndex)
     {
-        if (menus[menuIndex].gameObject.transform.parent == menuSpawnLoc)
-            return DeactivateMenu(menuIndex);
-        else if (menus[menuIndex].gameObject.transform.parent == menuCacheLoc)
+        if (menus[menuIndex].gameObject.transform.parent == menuCacheLoc)
+        {
             return ActivateMenu(menuIndex);
+        }
         else
         {
-            Debug.Log("Menu is in an unknown state!");
-            return null;
+            return DeactivateMenu(menuIndex);
         }
     }
 
@@ -70,10 +72,27 @@ public class LMCCMenuSpawner : MonoBehaviour
         }
 
         LMCCMenu menu = menus[menuIndex];
+
+        // If the menu is currently in a menu box, set its currentMenu to null
+        foreach (LMCCMenuBox box in menuBoxes)
+        {
+            if (box.CurrentMenu == menu)
+            {
+                box.CurrentMenu = null;
+                box.RemoveFillEvent(menu.GetComponent<MenuComponent>());
+            }
+        }
+
         menu.Display(false, () =>
         {
             menu.transform.SetParent(menuCacheLoc);
             menu.transform.position = menuCacheLoc.position;
+
+            // If the menu is inverted, invert it back
+            if (menu.GetComponent<MenuComponent>().Inverted)
+            {
+                menu.GetComponent<MenuComponent>().InvertGrabPoint(false);
+            }
         });
         return menu;
     }
@@ -82,6 +101,11 @@ public class LMCCMenuSpawner : MonoBehaviour
     {
         foreach (LMCCMenuBox box in menuBoxes)
         {
+            if (box.CurrentMenu != null)
+            {
+                continue;
+            }
+
             if (display)
                 box.Image.CrossFadeAlpha(1f, 0.1f, true);
             else

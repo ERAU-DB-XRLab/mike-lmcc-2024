@@ -11,20 +11,20 @@ public class MIKEHUDAudioService : MIKEService
 
     // Packet data
     private bool parsing = false;
-    private int packetsParsed = 0;
+    //private int packetsParsed = 0;
     private List<byte> mainData = new List<byte>();
     private float firstPacketTime;
 
-
+    // Start is called before the first frame update
     void Start()
     {
-        serviceID = 1;
-        MIKEInputManager.Main.RegisterService(serviceID, this);
+        Service = ServiceType.Message;
+        IsReliable = false;
+        MIKEInputManager.Main.RegisterService(Service, this);
     }
 
     public override void ReceiveData(byte[] data)
     {
-
         List<byte> dataAsList = data.ToList();
 
         // remove device ID byte
@@ -45,6 +45,7 @@ public class MIKEHUDAudioService : MIKEService
         //}
     }
 
+    // Update is called once per frame
     void Update()
     {
         if (parsing)
@@ -61,7 +62,7 @@ public class MIKEHUDAudioService : MIKEService
     public void ResetData()
     {
         mainData.Clear();
-        packetsParsed = 0;
+        //packetsParsed = 0;
         parsing = false;
     }
 
