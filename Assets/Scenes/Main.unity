@@ -1159,7 +1159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9400e352eecc1d49b5c514756c62c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serviceID: 1
   hudScreen: {fileID: 494576576075503757}
 --- !u!114 &561108919
 MonoBehaviour:
@@ -2139,7 +2138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &832979175
 Transform:
   m_ObjectHideFlags: 0
@@ -6375,6 +6374,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d36987d1d2096b4599b171110a37fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alphabet:
+  - 97
+  - 98
+  - 99
+  - 100
+  - 101
+  - 102
+  - 103
+  - 104
+  - 105
+  - 106
+  - 107
+  - 108
+  - 109
+  - 110
+  - 111
+  - 112
+  - 113
+  - 114
+  - 115
+  - 116
+  - 117
+  - 118
+  - 119
+  - 120
+  - 121
+  - 122
   mapStart: {fileID: 8555286397250371796}
   mapEnd: {fileID: 3578167653988577337}
   ignore: {fileID: 4174243448502322338}
