@@ -16,7 +16,6 @@ public class MIKEMap : MonoBehaviour
 
     void Awake()
     {
-        //Debug.Log(GetPositionFromCode("V7"));
         if (Main == null)
             Main = this;
         else
@@ -50,7 +49,7 @@ public class MIKEMap : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Code length must be size 2, of the format <Letter><Number>");
+            Debug.LogWarning("MIKEMap: Code length must be size 2, of the format <Letter><Number>");
         }
 
         return Vector3.zero;
@@ -67,15 +66,20 @@ public class MIKEMap : MonoBehaviour
     public Vector3 GetPositionFromNormalized(Vector2 normalizedPosition)
     {
         float x = Mathf.Lerp(mapStart.localPosition.x, mapEnd.localPosition.x, normalizedPosition.x);
-        float y = mapStart.position.y;
+        float y = ignore.transform.position.y;
         float z = Mathf.Lerp(mapStart.localPosition.z, mapEnd.localPosition.z, normalizedPosition.y);
 
-        if (Physics.Raycast(new Vector3(x, mapStart.position.y + 10, z), Vector3.down, out RaycastHit hit, 100, mapLayer))
+        ignore.transform.localPosition = new Vector3(x, y, z);
+
+        if (Physics.Raycast(ignore.transform.position + Vector3.up * 500, Vector3.down, out RaycastHit hit, 1000, mapLayer))
         {
-            y = hit.point.y;
+            ignore.transform.position = new Vector3(ignore.transform.position.x, hit.point.y, ignore.transform.position.z);
+        }
+        else
+        {
+            Debug.LogWarning("MIKEMap: No hit found for normalized position. Using default height.");
         }
 
-        ignore.transform.localPosition = new Vector3(x, y, z);
         return ignore.transform.position;
     }
 }

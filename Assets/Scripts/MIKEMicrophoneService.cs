@@ -75,7 +75,7 @@ public class MIKEMicrophoneService : MonoBehaviour
         byte[] byteArray = new byte[audioData.Length * 4];
         Buffer.BlockCopy(audioData, 0, byteArray, 0, byteArray.Length);
         Debug.Log("Sending sample count: " + audioData.Length);
-        MIKEServerManager.Main.SendData(ServiceType.Message, byteArray);
+        MIKEServerManager.Main.SendData(ServiceType.Audio, byteArray);
     }
 
 }

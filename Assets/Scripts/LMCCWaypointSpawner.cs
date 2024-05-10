@@ -28,24 +28,16 @@ public class LMCCWaypointSpawner : MonoBehaviour
 
     private void GrabbedWaypoint(MenuComponent component, HandInteract interact)
     {
-        LMCCNavBar.Main.Display(false, () =>
-        {
-            LMCCNavBar.Main.Buttons.ForEach(button => button.gameObject.SetActive(false));
-        });
-        currWaypoint.Grabbed = true;
-        currWaypoint.Placed = false;
+        LMCCNavBar.Main.Hide();
     }
 
     private void DroppedWaypoint(MenuComponent component, HandInteract interact)
     {
-        if (!currWaypoint.Placed)
-        {
-            Destroy(currWaypoint.gameObject);
-        }
+        currWaypoint.GetComponent<MenuComponent>().OnUIGrabbed -= GrabbedWaypoint;
+        currWaypoint.GetComponent<MenuComponent>().OnUIDropped -= DroppedWaypoint;
 
         SpawnNewWaypoint();
-        LMCCNavBar.Main.Buttons.ForEach(button => button.gameObject.SetActive(true));
-        LMCCNavBar.Main.Display(true);
+        LMCCNavBar.Main.Show();
     }
 
     public void SpawnNewWaypoint()
@@ -55,11 +47,18 @@ public class LMCCWaypointSpawner : MonoBehaviour
         currWaypoint.GetComponent<MenuComponent>().OnUIDropped += DroppedWaypoint;
     }
 
-    public void SpawnNewHUDWaypoint(Vector3 localPosition)
+    // Spawn a new HUD waypoint at a specific position
+    public void SpawnNewHUDWaypoint(int waypointID, Vector3 position)
     {
-        currWaypoint = Instantiate(waypointPrefab, MIKEMap.Main.transform.parent).GetComponent<LMCCWaypoint>();
-        currWaypoint.transform.localPosition = localPosition;
-        currWaypoint.GetComponent<MenuComponent>().OnUIGrabbed += GrabbedWaypoint;
-        currWaypoint.GetComponent<MenuComponent>().OnUIDropped += DroppedWaypoint;
+        LMCCWaypoint hudWaypoint = Instantiate(waypointPrefab, MIKEMap.Main.transform).GetComponent<LMCCWaypoint>();
+        hudWaypoint.WaypointID = waypointID;
+        hudWaypoint.transform.position = position;
+
+        if (Physics.Raycast(hudWaypoint.transform.position + Vector3.up * 500, Vector3.down, out RaycastHit hit, 1000, LayerMask.GetMask("Map")))
+        {
+            hudWaypoint.Ring.transform.rotation = Quaternion.LookRotation(hit.normal);
+        }
+
+        hudWaypoint.Placed = true;
     }
 }

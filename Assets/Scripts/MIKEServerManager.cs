@@ -15,7 +15,6 @@ public class MIKEServerManager : MonoBehaviour
     private Socket sock;
     private IPEndPoint endPoint;
 
-
     // Receiving
     private Queue<byte[]> dataToReceive = new Queue<byte[]>();
     private bool tasksRunning = true;
@@ -23,26 +22,29 @@ public class MIKEServerManager : MonoBehaviour
     private const int reliableSendCount = 30;
     private int reliableCounter = 0;
 
-    [SerializeField] private string otherIP;
     public string OtherIP { get { return otherIP; } set { otherIP = value; } }
+    [SerializeField] private string otherIP;
+    [SerializeField] private int sendPort = 7777;
+    [SerializeField] private int receivePort = 7777;
 
     // Start TCP server
     void Awake()
     {
-        Main = this;
+        if (Main == null)
+            Main = this;
+        else
+            Destroy(this);
 
         // Sending
-        sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram,
-        ProtocolType.Udp);
+        sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         IPAddress otherAddress = IPAddress.Parse(otherIP);
-        endPoint = new IPEndPoint(otherAddress, 7777);
+        endPoint = new IPEndPoint(otherAddress, sendPort);
 
         // Receiving
-
         Task.Run(async () =>
         {
-            using (var udpClient = new UdpClient(7777))
+            using (var udpClient = new UdpClient(receivePort))
             {
                 while (tasksRunning)
                 {
@@ -91,7 +93,6 @@ public class MIKEServerManager : MonoBehaviour
             dataAsList.RemoveRange(0, count);
 
             sock.SendTo(dataToSend.ToArray(), endPoint);
-            Debug.Log(dataToSend.Count);
 
             byteTotal -= count;
         }

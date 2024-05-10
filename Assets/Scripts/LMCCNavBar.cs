@@ -37,4 +37,19 @@ public class LMCCNavBar : LMCCFadeBehavior
             LMCCMenuSpawner.Main.ToggleMenu(index);
         }
     }
+
+    public void Show()
+    {
+        Buttons.ForEach(button => button.gameObject.SetActive(true));
+        Display(true);
+    }
+
+    public void Hide()
+    {
+        Display(false, () =>
+        {
+            Buttons.ForEach(button => button.gameObject.SetActive(false));
+        });
+    }
+
 }

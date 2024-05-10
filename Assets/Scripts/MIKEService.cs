@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ServiceType
 {
-    Message = 1,
+    Audio = 1,
     Waypoint = 6,
 }
 
@@ -13,4 +13,5 @@ public abstract class MIKEService : MonoBehaviour
     public ServiceType Service { get; protected set; }
     public bool IsReliable { get; protected set; }
     public abstract void ReceiveData(byte[] data);
+
 }

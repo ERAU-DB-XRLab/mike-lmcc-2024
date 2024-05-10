@@ -18,7 +18,7 @@ public class MIKEHUDAudioService : MIKEService
     // Start is called before the first frame update
     void Start()
     {
-        Service = ServiceType.Message;
+        Service = ServiceType.Audio;
         IsReliable = false;
         MIKEInputManager.Main.RegisterService(Service, this);
     }
