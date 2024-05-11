@@ -12,12 +12,17 @@ public class ButtonComponent : InteractableComponent
     [SerializeField] private Transform buttonObj;
     [SerializeField] private float pressAmount;
     [Space]
-    [SerializeField] private bool toggle;
+    [SerializeField] protected bool toggle;
+    [SerializeField] private float pressCooldown = 0.25f;
     private Vector3 unpressedPos, pressedPos, desiredPos;
     private Vector3 refVel;
     private int pointerCount = 0;
-    private bool pressed = false;
-    private bool reset = false;
+    protected bool pressed = false;
+    //private bool reset = false;
+
+    protected bool onButtonCooldown = false;
+    protected bool onButtonExit = false;
+    private float timer = 0f;
 
     new void Awake()
     {
@@ -28,28 +33,45 @@ public class ButtonComponent : InteractableComponent
 
         PointerEntered.AddListener(PointerEnter);
         PointerExited.AddListener(PointerExit);
-
     }
 
     void Update()
     {
         buttonObj.localPosition = Vector3.SmoothDamp(buttonObj.localPosition, desiredPos, ref refVel, 0.025f);
+
+        if (onButtonCooldown && onButtonExit)
+        {
+            timer += Time.deltaTime;
+            if (timer >= pressCooldown)
+            {
+                onButtonCooldown = false;
+                onButtonExit = false;
+                timer = 0f;
+            }
+        }
     }
 
     public virtual void PointerEnter(HandInteract interact)
     {
+        if (onButtonCooldown)
+            return;
         ChangePointerCount(1);
+        onButtonCooldown = true;
     }
 
     public virtual void PointerExit(HandInteract interact)
     {
+        if (onButtonExit)
+            return;
+        if (onButtonCooldown)
+            onButtonExit = true;
         ChangePointerCount(-1);
     }
 
     public void ChangePointerCount(int change)
     {
 
-        pointerCount += change;
+        pointerCount = Mathf.Clamp(pointerCount + change, 0, 1);
 
         if (!toggle)
         {
@@ -69,38 +91,35 @@ public class ButtonComponent : InteractableComponent
         }
         else
         {
-            if (pointerCount > 0 && reset)
+            if (pointerCount > 0)// && reset)
             {
 
-                reset = false;
-                pressed = !pressed;
+                //reset = false;
 
                 if (pressed)
                 {
-                    desiredPos = pressedPos;
+                    desiredPos = unpressedPos;
                 }
                 else
                 {
-                    desiredPos = unpressedPos;
+                    desiredPos = pressedPos;
                 }
 
+                pressed = !pressed;
                 ValueChanged.Invoke(pressed);
-
             }
         }
 
-        if (pointerCount == 0)
+        /*if (pointerCount == 0)
         {
             reset = true;
-        }
+        }*/
 
     }
 
     public Vector3 GetPressVector()
     {
-
         return DBXRResources.Main.GetDirectionFromTransform(buttonObj, pressDirection);
-
     }
 
     public bool IsPressed()

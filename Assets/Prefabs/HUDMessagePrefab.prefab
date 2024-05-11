@@ -806,8 +806,8 @@ RectTransform:
   m_GameObject: {fileID: 8821907549171960117}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 59.523792, y: 59.52377, z: 59.523777}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 55, y: 55, z: 55}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3526194615086328690}
   - {fileID: 7461620642963822478}
@@ -994,6 +994,7 @@ MonoBehaviour:
   buttonObj: {fileID: 3526194615086328690}
   pressAmount: 0.3
   toggle: 0
+  pressCooldown: 0.5
   highlightImage: {fileID: 4969328564286781465}
 --- !u!65 &3491028314909282257
 BoxCollider:

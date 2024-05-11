@@ -81,7 +81,7 @@ public class MIKEServerManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Data Count: " + dataToReceive.Count);
+        //Debug.Log("Data Count: " + dataToReceive.Count);
         if (dataToReceive.Count > 0)
         {
             MIKEInputManager.Main.ReceiveInput(dataToReceive.TryDequeue(out byte[] data) ? data : null);

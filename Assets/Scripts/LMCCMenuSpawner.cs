@@ -60,6 +60,10 @@ public class LMCCMenuSpawner : MonoBehaviour
         menu.transform.SetParent(menuSpawnLoc);
         menu.transform.position = menuSpawnLoc.position;
         menu.Display(true);
+
+        if (menu.CurrentScreen != null)
+            menu.CurrentScreen.ScreenActivated();
+
         return menu;
     }
 
@@ -82,6 +86,9 @@ public class LMCCMenuSpawner : MonoBehaviour
                 box.RemoveFillEvent(menu.GetComponent<MenuComponent>());
             }
         }
+
+        if (menu.CurrentScreen != null)
+            menu.CurrentScreen.ScreenDeactivated();
 
         menu.Display(false, () =>
         {
