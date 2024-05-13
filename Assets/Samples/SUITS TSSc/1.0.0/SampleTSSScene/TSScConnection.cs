@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
-
-using TMPro;
 
 public class TSScConnection : MonoBehaviour
 {
@@ -13,7 +10,7 @@ public class TSScConnection : MonoBehaviour
     string port;
     string url;
     int team_number;
-    bool connected;
+    public bool connected;
     float time_since_last_update;
 
     // Database Jsons
@@ -124,6 +121,9 @@ public class TSScConnection : MonoBehaviour
                         //Debug.Log(this.UIAJsonString);
                     }
                     break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
+                    break;
             }
 
         }
@@ -158,6 +158,9 @@ public class TSScConnection : MonoBehaviour
                         this.DCUJsonString = webRequest.downloadHandler.text;
                         //Debug.Log(this.DCUJsonString);
                     }
+                    break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
                     break;
             }
 
@@ -194,6 +197,9 @@ public class TSScConnection : MonoBehaviour
                         //Debug.Log(this.ROVERJsonString);
                     }
                     break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
+                    break;
             }
 
         }
@@ -228,6 +234,9 @@ public class TSScConnection : MonoBehaviour
                         this.SPECJsonString = webRequest.downloadHandler.text;
                         //Debug.Log(this.SPECJsonString);
                     }
+                    break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
                     break;
             }
 
@@ -264,6 +273,9 @@ public class TSScConnection : MonoBehaviour
                         //Debug.Log(this.TELEMETRYJsonString);
                     }
                     break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
+                    break;
             }
 
         }
@@ -298,6 +310,9 @@ public class TSScConnection : MonoBehaviour
                         this.COMMJsonString = webRequest.downloadHandler.text;
                         //Debug.Log(this.COMMJsonString);
                     }
+                    break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
                     break;
             }
 
@@ -334,6 +349,9 @@ public class TSScConnection : MonoBehaviour
                         //Debug.Log(this.IMUJsonString);
                     }
                     break;
+                case UnityWebRequest.Result.ConnectionError:
+                    connected = false;
+                    break;
             }
 
         }
@@ -349,8 +367,4 @@ public class TSScConnection : MonoBehaviour
     {
         return IMUUpdated;
     }
-
-
-
-
 }

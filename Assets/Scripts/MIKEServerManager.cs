@@ -6,22 +6,28 @@ using System.Net.Sockets;
 using System.Linq;
 using System.Collections;
 using System.Collections.Concurrent;
+using System;
+
+public enum DeliveryType
+{
+    Reliable,
+    Unreliable
+}
 
 public class MIKEServerManager : MonoBehaviour
 {
-
     public static MIKEServerManager Main { get; private set; }
 
-    // Sending
-    private Socket sock;
+    public bool Connected { get; private set; } = true;
+
+    private Socket socket;
     private IPEndPoint endPoint;
+    private byte[] buffer = new byte[4096];
+    private Queue<byte[]> dataToReceive = new Queue<byte[]>();
+    private bool tasksRunning;
 
-    // Receiving
-    private UdpClient udpClient;
-    private ConcurrentQueue<byte[]> dataToReceive = new ConcurrentQueue<byte[]>();
-    private bool tasksRunning = true;
-
-    private const int reliableSendCount = 1;
+    public int ReliableSendCount { get { return reliableSendCount; } }
+    private const int reliableSendCount = 30;
     private const float reliableSendInterval = 0.1f;
     private int reliableCounter = 0;
 
@@ -30,7 +36,7 @@ public class MIKEServerManager : MonoBehaviour
     [SerializeField] private int sendPort = 7777;
     [SerializeField] private int receivePort = 7777;
 
-    // Start TCP server
+    // Start UDP server
     void Awake()
     {
         if (Main == null)
@@ -38,13 +44,8 @@ public class MIKEServerManager : MonoBehaviour
         else
             Destroy(this);
 
-        // Sending
-        sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-        IPAddress otherAddress = IPAddress.Parse(otherIP);
-        endPoint = new IPEndPoint(otherAddress, sendPort);
-        udpClient = new UdpClient(receivePort);
-        ReceiveData();
+        StartServer();
+        SetEndPoint(otherIP);
 
         // Receiving
         /*Task.Run(async () =>
@@ -61,21 +62,53 @@ public class MIKEServerManager : MonoBehaviour
         });*/
     }
 
+    public void StartServer()
+    {
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        socket.Bind(new IPEndPoint(IPAddress.Any, receivePort));
+        tasksRunning = true;
+        ReceiveData();
+        Debug.Log("Server started.");
+    }
+
+    public void SetEndPoint(string ip)
+    {
+        OtherIP = ip;
+        endPoint = new IPEndPoint(IPAddress.Parse(otherIP), sendPort);
+        Debug.Log("IP set to: " + OtherIP);
+    }
+
     private async void ReceiveData()
     {
+        //var recvEP = new IPEndPoint(IPAddress.Any, receivePort);
+        var segBuffer = new ArraySegment<byte>(buffer);
         while (tasksRunning)
         {
-            //Debug.Log("Waiting for data...");
-            var receivedResults = await udpClient.ReceiveAsync();
-            dataToReceive.Enqueue(receivedResults.Buffer);
-            //await Task.Delay(100);
-            //Debug.Log("Length: " + receivedResults.Buffer.Length);
+            try
+            {
+                Debug.Log("Waiting for data...");
+
+                var receivedResults = await socket.ReceiveAsync(segBuffer, SocketFlags.None);
+                byte[] data = segBuffer.Slice(0, receivedResults).ToArray();
+                dataToReceive.Enqueue(data);
+
+                Debug.Log("Length: " + data.Length);
+            }
+            catch (ObjectDisposedException)
+            {
+                Debug.Log("Socket closed.");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("MIKEServerManager error when receiving data: " + e.Message);
+            }
         }
     }
 
     void OnDisable()
     {
         tasksRunning = false;
+        socket.Close();
         Debug.Log("Server stopped.");
     }
 
@@ -84,38 +117,60 @@ public class MIKEServerManager : MonoBehaviour
         //Debug.Log("Data Count: " + dataToReceive.Count);
         if (dataToReceive.Count > 0)
         {
+            Debug.Log("Receiving data...");
             MIKEInputManager.Main.ReceiveInput(dataToReceive.TryDequeue(out byte[] data) ? data : null);
 
-            if (dataToReceive.Count > 40)
+            /*if (dataToReceive.Count > 40)
             {
                 dataToReceive.Clear();
-            }
+            }*/
         }
     }
 
-    public void SendData(ServiceType type, MIKEPacket packet, bool insertServiceType = true)
+    public async void SendData(ServiceType type, MIKEPacket packet, DeliveryType deliveryType)
     {
-        if (insertServiceType)
-            packet.InsertAtStart((byte)((int)type));
-        sock.SendTo(packet.ByteArray, endPoint);
-
-        //while (packet.UnreadLength > 0)
-        //{
-        //    int count = packet.UnreadLength >= maxPacketSize ? maxPacketSize : packet.UnreadLength;
-        //    sock.SendTo(packet.ReadBytes(count), endPoint);
-        //}
+        if (deliveryType == DeliveryType.Reliable)
+            await SendDataReliably(type, packet);
+        else
+            await SendData(type, packet, true);
     }
 
-    public void SendDataReliably(ServiceType type, MIKEPacket packet)
+    private async Task SendData(ServiceType type, MIKEPacket packet, bool insertServiceType)
+    {
+        try
+        {
+            if (insertServiceType)
+                packet.InsertAtStart((byte)((int)type));
+            if (endPoint == null)
+            {
+                Debug.LogError("No endpoint set.");
+                return;
+            }
+            await socket.SendToAsync(packet.ByteArray, SocketFlags.None, endPoint);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("MIKEServerManager error when sending data: " + e.Message);
+        }
+    }
+
+    // Sends the packet multiple times to make sure it is received, I know this is stupid but I simply don't give a shit
+    private async Task SendDataReliably(ServiceType type, MIKEPacket packet)
     {
         reliableCounter++;
         packet.InsertAtStart(reliableCounter);
         packet.InsertAtStart((byte)((int)type));
-        StartCoroutine(SendDataCoroutine(type, packet));
+
+        int count = 0;
+        while (count < reliableSendCount)
+        {
+            await SendData(type, packet, false);
+            await Task.Delay((int)(reliableSendInterval * 1000));
+            count++;
+        }
     }
 
-    // Sends the packet multiple times to make sure it is received, I know this is stupid but I simply don't give a shit
-    private IEnumerator SendDataCoroutine(ServiceType type, MIKEPacket packet)
+    /*private IEnumerator SendDataCoroutine(ServiceType type, MIKEPacket packet)
     {
         int count = 0;
         while (count < reliableSendCount)
@@ -124,24 +179,25 @@ public class MIKEServerManager : MonoBehaviour
             count++;
             yield return new WaitForSeconds(reliableSendInterval);
         }
-    }
+    }*/
 
     /*public void SendData(ServiceType type, byte[] data)
     {
         int serviceID = (int)type;
+        int packetSize = 65000;
         int byteTotal = data.Length;
 
         List<byte> dataAsList = data.ToList();
 
         while (byteTotal > 0)
         {
-            int count = byteTotal >= maxPacketSize ? maxPacketSize : byteTotal;
+            int count = byteTotal >= packetSize ? packetSize : byteTotal;
 
             List<byte> dataToSend = new List<byte>() { (byte)serviceID };
             dataToSend.AddRange(dataAsList.GetRange(0, count));
             dataAsList.RemoveRange(0, count);
 
-            sock.SendTo(dataToSend.ToArray(), endPoint);
+            socket.SendTo(dataToSend.ToArray(), endPoint);
 
             byteTotal -= count;
         }

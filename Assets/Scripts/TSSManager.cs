@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 
 public enum EVA
 {
@@ -13,6 +12,11 @@ public enum EVA
 
 public class TSSManager : MonoBehaviour
 {
+    public delegate void Connection();
+    public event Connection OnConnected;
+    public delegate void Disconnection();
+    public event Disconnection OnDisconnected;
+
     public delegate void UIAUpdated(UIAData data);
     public event UIAUpdated OnUIAUpdated;
 
@@ -36,6 +40,7 @@ public class TSSManager : MonoBehaviour
 
 
     public static TSSManager Main { get; private set; }
+    public bool Connected { get { return TSSc.connected; } }
 
     public string Host { get { return host; } set { host = value; } }
     public EVA CurrentEVA { get { return currentEVA; } set { currentEVA = value; } }
@@ -51,6 +56,8 @@ public class TSSManager : MonoBehaviour
 
     [SerializeField] private string host = "127.0.0.1";
     [SerializeField] private EVA currentEVA;
+
+    private bool currentCalledEvent = false; // True is OnConnected, False is OnDisconnected
 
     private JsonSerializerSettings settings = new JsonSerializerSettings
     {
@@ -137,9 +144,20 @@ public class TSSManager : MonoBehaviour
         if (TSSc.isIMUUpdated())
         {
             //Debug.Log("IMU Updated");
-            IMU_EVAData temp = JsonConvert.DeserializeObject<IMUWrapper>(TSSc.GetIMUJsonString()).imu;
-            IMUData = CurrentEVA == EVA.EVA1 ? temp.eva1 : temp.eva2;
+            IMUData = JsonConvert.DeserializeObject<IMUWrapper>(TSSc.GetIMUJsonString()).imu;
             OnIMUUpdated?.Invoke(IMUData);
+        }
+
+        // Check the connection status
+        if (Connected && !currentCalledEvent)
+        {
+            currentCalledEvent = true;
+            OnConnected?.Invoke();
+        }
+        else if (!Connected && currentCalledEvent)
+        {
+            currentCalledEvent = false;
+            OnDisconnected?.Invoke();
         }
     }
 }
@@ -286,19 +304,41 @@ public class CommData
 
 public class IMUWrapper
 {
-    public IMU_EVAData imu;
-}
-
-public class IMU_EVAData
-{
-    public IMUData eva1;
-    public IMUData eva2;
+    [JsonRequired]
+    public IMUData imu;
 }
 
 [Serializable]
 public class IMUData
 {
-    public double posx;
-    public double posy;
-    public double heading;
+    [JsonRequired]
+    public Data eva1;
+    [JsonRequired]
+    public Data eva2;
+
+    public class Data
+    {
+        [JsonRequired]
+        public double posx;
+        [JsonRequired]
+        public double posy;
+        [JsonRequired]
+        public double heading;
+    }
+
+    public Data YourEVA
+    {
+        get
+        {
+            return TSSManager.Main.CurrentEVA == EVA.EVA1 ? eva1 : eva2;
+        }
+    }
+
+    public Data OtherEVA
+    {
+        get
+        {
+            return TSSManager.Main.CurrentEVA == EVA.EVA1 ? eva2 : eva1;
+        }
+    }
 }

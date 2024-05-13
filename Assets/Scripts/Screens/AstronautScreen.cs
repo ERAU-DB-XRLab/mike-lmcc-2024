@@ -21,9 +21,9 @@ public class AstronautScreen : LMCCScreen
 
     private void UpdateIMU(IMUData data)
     {
-        astroX.SetValue((float)data.posx, MIKEResources.Main.PositiveNotificationColor);
-        astroY.SetValue((float)data.posy, MIKEResources.Main.PositiveNotificationColor);
-        heading.SetValue((float)data.heading, MIKEResources.Main.PositiveNotificationColor);
+        astroX.SetValue((float)data.YourEVA.posx, MIKEResources.Main.PositiveNotificationColor);
+        astroY.SetValue((float)data.YourEVA.posy, MIKEResources.Main.PositiveNotificationColor);
+        heading.SetValue((float)data.YourEVA.heading, MIKEResources.Main.PositiveNotificationColor);
     }
 
     // Update is called once per frame

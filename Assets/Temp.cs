@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class Temp : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Transform leftHand, rightHand;
+    private Animator anim;
+
+    void Awake()
     {
-        MIKEPacket packet = new MIKEPacket();
-        packet.Write("Hello!擅");
-        packet.Write('擅');
-        packet.ReadString();
+        anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnAnimatorIK()
     {
-
+        anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHand.position);
+        anim.SetIKPosition(AvatarIKGoal.RightHand, rightHand.position);
+        anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+        anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
     }
 }

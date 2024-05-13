@@ -150,7 +150,7 @@ public class LMCCWaypoint : MonoBehaviour
             packet.Write(normalizedPos.y);
         }
 
-        MIKEServerManager.Main.SendDataReliably(ServiceType.Waypoint, packet);
+        MIKEServerManager.Main.SendData(ServiceType.Waypoint, packet, DeliveryType.Reliable);
     }
 
     private void ResetWaypoint()

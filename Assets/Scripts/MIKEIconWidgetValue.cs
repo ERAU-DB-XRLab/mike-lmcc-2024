@@ -18,6 +18,6 @@ public class MIKEIconWidgetValue : MIKEWidgetValue
 
     public void SetFill(float value)
     {
-        iconImage.fillAmount = (value - minValue) / (maxValue - minValue);
+        //iconImage = (value - minValue) / (maxValue - minValue);
     }
 }

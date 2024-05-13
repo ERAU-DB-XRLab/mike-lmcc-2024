@@ -55,11 +55,13 @@ public class LMCCWaypointSpawner : MonoBehaviour
         hudWaypoint.WaypointID = waypointID;
         hudWaypoint.transform.position = position;
 
-        if (Physics.Raycast(hudWaypoint.transform.position + Vector3.up * 500, Vector3.down, out RaycastHit hit, 1000, LayerMask.GetMask("Map")))
+        if (MIKEMap.Main.IsPositionOnMap(hudWaypoint.transform.position, out RaycastHit hit))
         {
             hudWaypoint.Ring.transform.rotation = Quaternion.LookRotation(hit.normal);
         }
 
+        hudWaypoint.GetComponentInChildren<HoverAbove>().IsBouncing = true;
+        hudWaypoint.GetComponentInChildren<Rotate>().IsRotating = true;
         hudWaypoint.Placed = true;
     }
 }

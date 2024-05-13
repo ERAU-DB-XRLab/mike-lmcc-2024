@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "12574c32f658fa23c194357141abc3fc157ea362"
     },
+    "com.postert.projnetforgeoapiforunity": {
+      "version": "https://github.com/postert/ProjNet4GeoAPI-For-Unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e033ddc108295c69af88effebae59370c0ba4001"
+    },
     "com.unity.burst": {
       "version": "1.8.4",
       "depth": 1,

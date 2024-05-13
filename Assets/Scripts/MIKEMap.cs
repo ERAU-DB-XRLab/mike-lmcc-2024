@@ -7,6 +7,7 @@ using UnityEngine;
 public class MIKEMap : MonoBehaviour
 {
     public static MIKEMap Main { get; private set; }
+    [SerializeField] private Transform mapCorrection;
 
     private char[] alphabet = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
@@ -63,7 +64,7 @@ public class MIKEMap : MonoBehaviour
         return new Vector2(x, z);
     }
 
-    public Vector3 GetPositionFromNormalized(Vector2 normalizedPosition)
+    public Vector3 GetPositionFromNormalized(Vector2 normalizedPosition, bool localPosition = false)
     {
         float x = Mathf.Lerp(mapStart.localPosition.x, mapEnd.localPosition.x, normalizedPosition.x);
         float y = ignore.transform.position.y;
@@ -71,7 +72,7 @@ public class MIKEMap : MonoBehaviour
 
         ignore.transform.localPosition = new Vector3(x, y, z);
 
-        if (Physics.Raycast(ignore.transform.position + Vector3.up * 500, Vector3.down, out RaycastHit hit, 1000, mapLayer))
+        if (IsPositionOnMap(ignore.transform.position, out RaycastHit hit))
         {
             ignore.transform.position = new Vector3(ignore.transform.position.x, hit.point.y, ignore.transform.position.z);
         }
@@ -80,6 +81,25 @@ public class MIKEMap : MonoBehaviour
             Debug.LogWarning("MIKEMap: No hit found for normalized position. Using default height.");
         }
 
-        return ignore.transform.position;
+        return localPosition ? ignore.transform.localPosition : ignore.transform.position;
+    }
+
+    public Vector3 GetPositionFromUTM(double easting, double northing, bool localPosition = false)
+    {
+        Vector3 pos = mapCorrection.TransformPoint(GPSConverter.Main.UTMToUCS(easting, northing));
+        if (IsPositionOnMap(pos, out RaycastHit hit))
+        {
+            return localPosition ? transform.InverseTransformPoint(hit.point) : hit.point;
+        }
+        else
+        {
+            Debug.LogWarning("MIKEMap: No hit found for UTM position. Using default height of 0.");
+            return localPosition ? transform.InverseTransformPoint(pos) : pos;
+        }
+    }
+
+    public bool IsPositionOnMap(Vector3 position, out RaycastHit hit, float height = 500, float maxRayDistance = 1000)
+    {
+        return Physics.Raycast(position + Vector3.up * height, Vector3.down, out hit, maxRayDistance, mapLayer);
     }
 }
