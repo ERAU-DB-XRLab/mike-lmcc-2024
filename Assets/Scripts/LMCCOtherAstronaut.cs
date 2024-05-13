@@ -6,11 +6,5 @@ public class LMCCOtherAstronaut : MonoBehaviour
 {
     public Animator Anim { get => anim; }
 
-    private Animator anim;
-
-    // Start is called before the first frame update
-    public void Start()
-    {
-        anim = GetComponentInChildren<Animator>();
-    }
+    [SerializeField] private Animator anim;
 }

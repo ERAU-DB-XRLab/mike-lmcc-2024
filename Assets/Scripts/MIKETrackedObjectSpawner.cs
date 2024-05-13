@@ -74,12 +74,12 @@ public class MIKETrackedObjectSpawner : MonoBehaviour
 
             if (Vector3.Distance(currOtherAstronaut.transform.localPosition, otherAstronautNewLocalPosition) > walkingStartDistance)
             {
-                //currOtherAstronaut.Anim.SetBool("IsWalking", true);
+                currOtherAstronaut.Anim.SetBool("IsWalking", true);
             }
             else
             {
-                //currOtherAstronaut.Anim.SetBool("IsWalking", false);
-                //currOtherAstronaut.transform.localPosition = otherAstronautNewLocalPosition;
+                currOtherAstronaut.Anim.SetBool("IsWalking", false);
+                currOtherAstronaut.transform.localPosition = otherAstronautNewLocalPosition;
             }
         }
 
