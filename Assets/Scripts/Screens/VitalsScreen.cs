@@ -1,9 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VitalsScreen : LMCCScreen
 {
+    [Header("Icons")]
+    [SerializeField] private MIKEIconWidgetValue heartRateIcon;
+    [SerializeField] private MIKEIconWidgetValue o2StorageIcon;
+    [SerializeField] private MIKEIconWidgetValue suitPSIIcon;
+    [SerializeField] private MIKEIconWidgetValue o2PSIIcon;
+    [SerializeField] private MIKEIconWidgetValue co2PSIIcon;
+    [SerializeField] private MIKEIconWidgetValue otherPSIIcon;
+    [SerializeField] private MIKEIconWidgetValue fanRPMIcon;
+    [SerializeField] private MIKEIconWidgetValue temperatureIcon;
+    [SerializeField] private MIKEIconWidgetValue helmetCO2Icon;
+    [SerializeField] private MIKEIconWidgetValue scrubberCO2StorageIcon;
+
     [Header("Resources")]
     [SerializeField] private MIKEVitalsWidgetValue batteryTimeLeft;
     [SerializeField] private MIKEVitalsWidgetValue O2timeLeft;
@@ -28,20 +41,27 @@ public class VitalsScreen : LMCCScreen
     [SerializeField] private MIKEVitalsWidgetValue fanSecondary;
 
     [Header("Misc")]
-    [SerializeField] private MIKEVitalsWidgetValue scrubberAPressure;
-    [SerializeField] private MIKEVitalsWidgetValue scrubberBPressure;
+    [SerializeField] private MIKEVitalsWidgetValue scrubberAStorage;
+    [SerializeField] private MIKEVitalsWidgetValue scrubberBStorage;
     [SerializeField] private MIKEVitalsWidgetValue temperature;
-    [SerializeField] private MIKEVitalsWidgetValue H20GasPressure;
-    [SerializeField] private MIKEVitalsWidgetValue H20LiquidPressure;
+    [SerializeField] private MIKEVitalsWidgetValue coolantGasPressure;
+    [SerializeField] private MIKEVitalsWidgetValue coolantLiquidPressure;
+    [Space]
+    [SerializeField] private GameObject errorBlockPrefab;
+    [SerializeField] private Transform errorBlockParent;
+    [SerializeField] private ContentSizeFitter fitter;
 
 
-    private Dictionary<MIKEVitalsWidgetValue, ErrorScenario> errorScenarios;
+    private Dictionary<AlertType, ErrorScenario> errorScenarios;
+    private Dictionary<AlertType, LMCCErrorBlock> errorBlocks;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        errorScenarios = new Dictionary<MIKEVitalsWidgetValue, ErrorScenario>();
-        SetWidgetValues();
+        errorScenarios = new Dictionary<AlertType, ErrorScenario>();
+        errorBlocks = new Dictionary<AlertType, LMCCErrorBlock>();
+        SetWidgetBounds();
         CreateErrorScenarios();
         TSSManager.Main.OnTelemetryUpdated += HandleVitalsData;
         TSSManager.Main.OnDCUUpdated += UpdateActiveDevices;
@@ -50,77 +70,92 @@ public class VitalsScreen : LMCCScreen
     private void HandleVitalsData(TelemetryData data)
     {
         UpdateVitals(data);
+        UpdateIconVitals(data);
         CheckForCriticalVitals();
-    }
-
-    private void UpdateActiveDevices(DCUData data)
-    {
-        errorScenarios[fanPrimary].deviceActive = data.fan;
-        errorScenarios[fanSecondary].deviceActive = !data.fan;
-
-        errorScenarios[scrubberAPressure].deviceActive = data.co2;
-        errorScenarios[scrubberBPressure].deviceActive = !data.co2;
     }
 
     private void UpdateVitals(TelemetryData data)
     {
-        batteryTimeLeft.SetValue((float)TSSManager.Main.TelemetryData.batt_time_left);
-        O2timeLeft.SetValue(TSSManager.Main.TelemetryData.oxy_time_left);
-        O2PrimaryStorage.SetValue((float)TSSManager.Main.TelemetryData.oxy_pri_storage);
-        O2PrimaryPressure.SetValue((float)TSSManager.Main.TelemetryData.oxy_pri_pressure);
-        O2SecondaryStorage.SetValue((float)TSSManager.Main.TelemetryData.oxy_sec_storage);
-        O2SecondaryPressure.SetValue((float)TSSManager.Main.TelemetryData.oxy_sec_pressure);
-        coolant.SetValue((float)TSSManager.Main.TelemetryData.coolant_ml);
+        batteryTimeLeft.SetValue((float)data.batt_time_left);
+        O2timeLeft.SetValue(data.oxy_time_left);
+        O2PrimaryStorage.SetValue((float)data.oxy_pri_storage);
+        O2PrimaryPressure.SetValue((float)data.oxy_pri_pressure);
+        O2SecondaryStorage.SetValue((float)data.oxy_sec_storage);
+        O2SecondaryPressure.SetValue((float)data.oxy_sec_pressure);
+        coolant.SetValue((float)data.coolant_ml);
 
-        heartRate.SetValue((float)TSSManager.Main.TelemetryData.heart_rate);
-        O2Consumption.SetValue((float)TSSManager.Main.TelemetryData.oxy_consumption);
-        CO2Production.SetValue((float)TSSManager.Main.TelemetryData.co2_production);
-        suitO2Pressure.SetValue((float)TSSManager.Main.TelemetryData.suit_pressure_oxy);
-        suitCO2Pressure.SetValue((float)TSSManager.Main.TelemetryData.suit_pressure_co2);
-        suitOtherPressure.SetValue((float)TSSManager.Main.TelemetryData.suit_pressure_other);
-        suitTotalPressure.SetValue((float)TSSManager.Main.TelemetryData.suit_pressure_total);
-        helmetCO2Pressure.SetValue((float)TSSManager.Main.TelemetryData.helmet_pressure_co2);
+        heartRate.SetValue((float)data.heart_rate);
+        O2Consumption.SetValue((float)data.oxy_consumption);
+        CO2Production.SetValue((float)data.co2_production);
+        suitO2Pressure.SetValue((float)data.suit_pressure_oxy);
+        suitCO2Pressure.SetValue((float)data.suit_pressure_co2);
+        suitOtherPressure.SetValue((float)data.suit_pressure_other);
+        suitTotalPressure.SetValue((float)data.suit_pressure_total);
+        helmetCO2Pressure.SetValue((float)data.helmet_pressure_co2);
 
-        fanPrimary.SetValue((float)TSSManager.Main.TelemetryData.fan_pri_rpm);
-        fanSecondary.SetValue((float)TSSManager.Main.TelemetryData.fan_sec_rpm);
+        fanPrimary.SetValue((float)data.fan_pri_rpm);
+        fanSecondary.SetValue((float)data.fan_sec_rpm);
 
-        scrubberAPressure.SetValue((float)TSSManager.Main.TelemetryData.scrubber_a_co2_storage);
-        scrubberBPressure.SetValue((float)TSSManager.Main.TelemetryData.scrubber_b_co2_storage);
-        temperature.SetValue((float)TSSManager.Main.TelemetryData.temperature);
-        H20GasPressure.SetValue((float)TSSManager.Main.TelemetryData.coolant_gas_pressure);
-        H20LiquidPressure.SetValue((float)TSSManager.Main.TelemetryData.coolant_liquid_pressure);
+        scrubberAStorage.SetValue((float)data.scrubber_a_co2_storage);
+        scrubberBStorage.SetValue((float)data.scrubber_b_co2_storage);
+        temperature.SetValue((float)data.temperature);
+        coolantGasPressure.SetValue((float)data.coolant_gas_pressure);
+        coolantLiquidPressure.SetValue((float)data.coolant_liquid_pressure);
+    }
+
+    private void UpdateIconVitals(TelemetryData data)
+    {
+        heartRateIcon.SetValue((float)data.heart_rate);
+        o2StorageIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.Oxygen].GetActiveStatus() == "Primary Tank" ? (float)data.oxy_pri_storage : (float)data.oxy_sec_storage);
+        suitPSIIcon.SetValue((float)data.suit_pressure_total);
+        o2PSIIcon.SetValue((float)data.suit_pressure_oxy);
+        co2PSIIcon.SetValue((float)data.suit_pressure_co2);
+        otherPSIIcon.SetValue((float)data.suit_pressure_other);
+        fanRPMIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Primary Fan" ? (float)data.fan_pri_rpm / 1000f : (float)data.fan_sec_rpm / 1000f);
+        temperatureIcon.SetValue((float)data.temperature);
+        helmetCO2Icon.SetValue((float)data.helmet_pressure_co2);
+        scrubberCO2StorageIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber A" ? (float)data.scrubber_a_co2_storage : (float)data.scrubber_b_co2_storage);
+    }
+
+    private void UpdateActiveDevices(DCUData data)
+    {
+        errorScenarios[AlertType.PrimaryFanRPM].deviceActive = data.fan;
+        errorScenarios[AlertType.SecondaryFanRPM].deviceActive = !data.fan;
+
+        errorScenarios[AlertType.CO2ScrubberAStorage].deviceActive = data.co2;
+        errorScenarios[AlertType.CO2ScrubberBStorage].deviceActive = !data.co2;
     }
 
     private void CheckForCriticalVitals()
     {
-        foreach (KeyValuePair<MIKEVitalsWidgetValue, ErrorScenario> entry in errorScenarios)
+        foreach (KeyValuePair<AlertType, Alert> entry in MIKEAlertManager.Main.Alerts)
         {
-            MIKEVitalsWidgetValue widget = entry.Key;
-            ErrorScenario scenario = entry.Value;
+            DisplayAlert(entry.Key, entry.Value.Active && errorScenarios[entry.Key].deviceActive, entry.Value.OutsideUpperBound);
+        }
+    }
 
-            if (scenario.deviceActive.HasValue && !scenario.deviceActive.Value)
+    private void DisplayAlert(AlertType type, bool value, bool upperBound)
+    {
+        if (value)
+        {
+            if (!errorBlocks.ContainsKey(type))
             {
-                continue;
+                LMCCErrorBlock block = Instantiate(errorBlockPrefab, errorBlockParent).GetComponent<LMCCErrorBlock>();
+                block.SetError(errorScenarios[type].title, upperBound ? errorScenarios[type].upperLimitMessage : errorScenarios[type].lowerLimitMessage);
+                errorBlocks.Add(type, block);
             }
-
-            if (widget.CurrentValue > widget.MaxValue)
+        }
+        else
+        {
+            if (errorBlocks.ContainsKey(type))
             {
-                // Create a critical message
-                MIKENotificationManager.Main.SendNotification("NOTIFICATION", scenario.upperLimitMessage, MIKEResources.Main.NegativeNotificationColor, 5f);
-            }
-            else if (widget.CurrentValue < widget.MinValue)
-            {
-                // Create a critical message
-                MIKENotificationManager.Main.SendNotification("NOTIFICATION", scenario.lowerLimitMessage, MIKEResources.Main.NegativeNotificationColor, 5f);
-            }
-            else
-            {
-                // Hide the critical message
+                Destroy(errorBlocks[type].gameObject);
+                errorBlocks.Remove(type);
             }
         }
     }
 
-    private void SetWidgetValues()
+    private void SetWidgetBounds()
     {
         batteryTimeLeft.SetBounds(3600f, 10800f);
         O2PrimaryStorage.SetBounds(20f, 100f);
@@ -139,117 +174,121 @@ public class VitalsScreen : LMCCScreen
         suitTotalPressure.SetBounds(3.5f, 4.5f, 4.0f);
         helmetCO2Pressure.SetBounds(0.0f, 0.15f, 0.1f);
 
-        fanPrimary.SetBounds(20000f, 30000f, 30000f);
-        fanSecondary.SetBounds(20000f, 30000f, 30000f);
+        fanPrimary.SetBounds(20000f, 30000f, 30001f);
+        fanSecondary.SetBounds(20000f, 30000f, 30001f);
 
-        scrubberAPressure.SetBounds(0f, 60f);
-        scrubberBPressure.SetBounds(0f, 60f);
+        scrubberAStorage.SetBounds(0f, 60f);
+        scrubberBStorage.SetBounds(0f, 60f);
         temperature.SetBounds(50f, 90f, 70f);
-        H20LiquidPressure.SetBounds(100f, 700f, 500f);
-        H20GasPressure.SetBounds(0f, 700f, 0f);
+        coolantLiquidPressure.SetBounds(100f, 700f, 500f);
+        coolantGasPressure.SetBounds(0f, 700f, 0f);
     }
 
     private void CreateErrorScenarios()
     {
         // Heart rate
-        errorScenarios.Add(heartRate, new ErrorScenario()
+        errorScenarios.Add(AlertType.HeartRate, new ErrorScenario()
         {
+            title = "Heart Rate",
             upperLimitMessage = "Heart rate is too high, please take a rest!",
             lowerLimitMessage = "Heart rate is too low, please exert more energy!", // Should never happen
-            upperLimitMessageBrief = "Heart rate too high",
-            lowerLimitMessageBrief = "Heart rate too low" // Should never happen
+            deviceActive = true
         });
 
         // Suit O2 pressure
-        errorScenarios.Add(suitO2Pressure, new ErrorScenario()
+        errorScenarios.Add(AlertType.O2SuitPressure, new ErrorScenario()
         {
+            title = "Suit O2 Pressure",
             upperLimitMessage = "Suit O2 pressure is too high, swap to the secondary tank",
             lowerLimitMessage = "Suit O2 pressure is too low, swap to the secondary tank",
-            upperLimitMessageBrief = "Suit O2 pressure too high",
-            lowerLimitMessageBrief = "Suit O2 pressure too low"
+            deviceActive = true
         });
 
         // Suit CO2 pressure
-        errorScenarios.Add(suitCO2Pressure, new ErrorScenario()
+        errorScenarios.Add(AlertType.CO2SuitPressure, new ErrorScenario()
         {
+            title = "Suit CO2 Pressure",
             upperLimitMessage = "Suit CO2 pressure is too high, please vent the scrubber",
             lowerLimitMessage = "Suit CO2 pressure is too low, please check the scrubber", // Should never happen
-            upperLimitMessageBrief = "Suit CO2 pressure too high",
-            lowerLimitMessageBrief = "Suit CO2 pressure too low" // Should never happen
+            deviceActive = true
+        });
+
+        // Suit other pressure
+        errorScenarios.Add(AlertType.OtherSuitPressure, new ErrorScenario()
+        {
+            title = "Other Suit Pressure",
+            upperLimitMessage = "The other gas pressures in the suit are too high after decompression, please alert the HUD",
+            lowerLimitMessage = "The other gas pressures in the suit are too low after decompression, please alert the HUD", // Should never happen
+            deviceActive = true
         });
 
         // Suit total pressure
-        errorScenarios.Add(suitTotalPressure, new ErrorScenario()
+        errorScenarios.Add(AlertType.TotalSuitPressure, new ErrorScenario()
         {
+            title = "Total Suit Pressure",
             upperLimitMessage = "Suit total pressure is too high, check the oxygen tank and scrubber",
             lowerLimitMessage = "Suit total pressure is too low, check the oxygen tank and scrubber",
-            upperLimitMessageBrief = "Suit total pressure too high",
-            lowerLimitMessageBrief = "Suit total pressure too low"
+            deviceActive = true
         });
 
         // Helmet
-        errorScenarios.Add(helmetCO2Pressure, new ErrorScenario()
+        errorScenarios.Add(AlertType.CO2HelmetPressure, new ErrorScenario()
         {
+            title = "Helmet CO2 Pressure",
             upperLimitMessage = "Helmet CO2 pressure is too high, swap to the other fan",
             lowerLimitMessage = "Helmet CO2 pressure is too low, swap to the other fan",
-            upperLimitMessageBrief = "Helmet CO2 pressure too high",
-            lowerLimitMessageBrief = "Helmet CO2 pressure too low"
+            deviceActive = true
         });
 
         // Fans
-        errorScenarios.Add(fanPrimary, new ErrorScenario()
+        errorScenarios.Add(AlertType.PrimaryFanRPM, new ErrorScenario()
         {
+            title = "Primary Fan RPM",
             upperLimitMessage = "Primary fan is spinning too fast, swap to the secondary fan", // Should never happen
             lowerLimitMessage = "Primary fan is not spinning fast enough, swap to the secondary fan",
-            upperLimitMessageBrief = "Primary fan spinning too fast", // Should never happen
-            lowerLimitMessageBrief = "Primary fan spinning too slow",
             deviceActive = false
         });
 
-        errorScenarios.Add(fanSecondary, new ErrorScenario()
+        errorScenarios.Add(AlertType.SecondaryFanRPM, new ErrorScenario()
         {
-            upperLimitMessage = "Secondary fan is spinning too fast, swap to the primary fan",
+            title = "Secondary Fan RPM",
+            upperLimitMessage = "Secondary fan is spinning too fast, swap to the primary fan", // Should never happen
             lowerLimitMessage = "Secondary fan is not spinning fast enough, swap to the primary fan",
-            upperLimitMessageBrief = "Secondary fan spinning too fast",
-            lowerLimitMessageBrief = "Secondary fan spinning too slow",
             deviceActive = false
         });
 
         // Scrubbers
-        errorScenarios.Add(scrubberAPressure, new ErrorScenario()
+        errorScenarios.Add(AlertType.CO2ScrubberAStorage, new ErrorScenario()
         {
+            title = "Scrubber A Storage",
             upperLimitMessage = "Scrubber A CO2 storage is too high, please vent",
             lowerLimitMessage = "Scrubber A CO2 storage is too low, please vent", // Should never happen
-            upperLimitMessageBrief = "Scrubber A pressure too high",
-            lowerLimitMessageBrief = "Scrubber A pressure too low", // Should never happen
             deviceActive = false
         });
 
-        errorScenarios.Add(scrubberBPressure, new ErrorScenario()
+        errorScenarios.Add(AlertType.CO2ScrubberBStorage, new ErrorScenario()
         {
+            title = "Scrubber B Storage",
             upperLimitMessage = "Scrubber B CO2 storage is too high, please vent",
             lowerLimitMessage = "Scrubber B CO2 storage is too low, please vent", // Should never happen
-            upperLimitMessageBrief = "Scrubber B pressure too high",
-            lowerLimitMessageBrief = "Scrubber B pressure too low", // Should never happen
             deviceActive = false
         });
 
         // Temperature
-        errorScenarios.Add(temperature, new ErrorScenario()
+        errorScenarios.Add(AlertType.Temperature, new ErrorScenario()
         {
+            title = "Temperature",
             upperLimitMessage = "Internal temperature is too high, please slow down!",
             lowerLimitMessage = "Internal temperature is too low, please speed up!", // Should never happen
-            upperLimitMessageBrief = "Temperature too high",
-            lowerLimitMessageBrief = "Temperature too low" // Should never happen
+            deviceActive = true
         });
     }
 }
 
 public class ErrorScenario
 {
+    public string title;
     public string upperLimitMessage;
     public string lowerLimitMessage;
-    public string upperLimitMessageBrief;
-    public string lowerLimitMessageBrief;
-    public bool? deviceActive;
+    public bool deviceActive;
 }

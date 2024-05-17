@@ -14,6 +14,12 @@ public class LMCCFadeBehavior : MonoBehaviour
     protected virtual void Awake()
     {
         graphics = new List<MaskableGraphic>();
+        ReInitialize();
+    }
+
+    public void ReInitialize()
+    {
+        graphics.Clear();
         foreach (MaskableGraphic graphic in GetComponentsInChildren<MaskableGraphic>(false))
         {
             graphics.Add(graphic);
@@ -21,7 +27,6 @@ public class LMCCFadeBehavior : MonoBehaviour
             if (!startVisible)
                 graphic.CrossFadeAlpha(0f, 0f, true);
         }
-
     }
 
     public void Display(bool display, UnityAction callback = null)

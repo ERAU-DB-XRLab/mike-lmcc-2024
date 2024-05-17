@@ -8,8 +8,10 @@ public enum ScreenType
     Rover,
     Message,
     System,
-    Settings,
     Astronaut,
+    Science,
+    Procedure,
+    Settings,
 }
 
 public abstract class LMCCScreen : MonoBehaviour

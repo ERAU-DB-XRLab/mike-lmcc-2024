@@ -30,7 +30,6 @@ public class SystemScreen : LMCCScreen
 
     private void UpdateDCU(DCUData data)
     {
-        Debug.Log("UpdateDCU");
         battery.SetValue(data.batt ? "Suit Battery" : "Umbilical Power", data.batt ? MIKEResources.Main.WarningNotificationColor : MIKEResources.Main.PositiveNotificationColor);
         oxygen.SetValue(data.oxy ? "Primary" : "Secondary", data.oxy ? MIKEResources.Main.PositiveNotificationColor : MIKEResources.Main.WarningNotificationColor);
         comms.SetValue(data.comm ? "A" : "B", data.comm ? MIKEResources.Main.PositiveNotificationColor : MIKEResources.Main.WarningNotificationColor);

@@ -46,6 +46,10 @@ public class MIKEVitalsWidgetValue : MIKEWidgetValue
         {
             currColor = MIKEResources.Main.PositiveNotificationColor;
         }
+        else if ((nomimalValue == minValue || nomimalValue == maxValue) && currValue == nomimalValue)
+        {
+            currColor = MIKEResources.Main.PositiveNotificationColor;
+        }
         else
         {
             float minLerp = (float)nomimalValue;
@@ -65,7 +69,7 @@ public class MIKEVitalsWidgetValue : MIKEWidgetValue
                 return;
             }
 
-            currColor = Color.Lerp(MIKEResources.Main.PositiveNotificationColor, MIKEResources.Main.WarningNotificationColor, Mathf.InverseLerp(minLerp, maxLerp, currValue));
+            currColor = Color.Lerp(MIKEResources.Main.WarningNotificationColor, MIKEResources.Main.PositiveNotificationColor, Mathf.InverseLerp(maxLerp, minLerp, currValue));
         }
     }
 }

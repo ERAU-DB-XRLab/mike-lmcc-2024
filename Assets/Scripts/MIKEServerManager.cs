@@ -22,7 +22,7 @@ public class MIKEServerManager : MonoBehaviour
 
     private Socket socket;
     private IPEndPoint endPoint;
-    private byte[] buffer = new byte[4096];
+    private byte[] buffer = new byte[16384];
     private Queue<byte[]> dataToReceive = new Queue<byte[]>();
     private bool tasksRunning;
 
@@ -92,7 +92,7 @@ public class MIKEServerManager : MonoBehaviour
                 byte[] data = segBuffer.Slice(0, receivedResults).ToArray();
                 dataToReceive.Enqueue(data);
 
-                Debug.Log("Length: " + data.Length);
+                //Debug.Log("Length: " + data.Length);
             }
             catch (ObjectDisposedException)
             {

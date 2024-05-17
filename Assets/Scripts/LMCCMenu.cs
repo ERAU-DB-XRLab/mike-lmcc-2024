@@ -11,6 +11,11 @@ public class LMCCMenu : LMCCFadeBehavior
         set { currentScreen = value; }
     }
 
+    public bool IsActive
+    {
+        get { return gameObject.activeSelf; }
+    }
+
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private LMCCScreen currentScreen;
 

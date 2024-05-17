@@ -1,0 +1,43 @@
+{
+    "steps": [
+        {
+            "step_number": "0",
+            "description": "Ensure that all switches are set to off"
+        },
+        {
+            "step_number": "1",
+            "description": "Power on EMU-1",
+            "sub_steps": [
+                {
+                    "step_number": "1.1",
+                    "description": "Switch EMU-1 Power to ON",
+                    "autocomplete": "EMU1_POWER,ON"
+                },
+                {
+                    "step_number": "1.2",
+                    "description": "When the SUIT is booted (emu1_is_booted), proceed"
+                }
+            ]
+        },
+        {
+            "step_number": "2",
+            "description": "Prepare UIA",
+            "sub_steps": [
+                {
+                    "step_number": "2.1",
+                    "description": "Switch O2 Vent to OPEN",
+                    "autocomplete": "O2_Vent,OPEN"
+                },
+                {
+                    "step_number": "2.2",
+                    "description": "When UIA Supply Pressure (uia_ < 23 psi, proceed"
+                },
+                {
+                    "step_number": "2.3",
+                    "description": "Switch O2 Vent to CLOSE",
+                    "autocomplete": "O2_Vent,CLOSE"
+                }
+            ]
+        }
+    ]
+}

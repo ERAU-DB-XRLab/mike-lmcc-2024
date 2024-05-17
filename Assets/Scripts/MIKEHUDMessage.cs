@@ -11,15 +11,40 @@ public class MIKEHUDMessage : MonoBehaviour
     [SerializeField] private Image fill;
     [SerializeField] private TextMeshProUGUI text;
 
-    public void LoadClip(AudioClip clip)
+    private bool toggled = false;
+
+    public void LoadClip(AudioClip clip, string time)
     {
         source.clip = clip;
-        text.SetText("LMCC Message - " + DateTime.Now.ToLongTimeString());
+        text.SetText("LMCC Message - " + time);
+    }
+
+    public void ToggleClip()
+    {
+        if (source.isPlaying && toggled)
+        {
+            StopClip();
+        }
+        else if (!toggled)
+        {
+            PlayClip();
+        }
+        else
+        {
+            toggled = false;
+        }
     }
 
     public void PlayClip()
     {
         source.Play();
+        toggled = true;
+    }
+
+    public void StopClip()
+    {
+        source.Stop();
+        toggled = false;
     }
 
     void Update()

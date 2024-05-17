@@ -238,16 +238,16 @@ public class SpecData
 
     public class Data
     {
-        public int SiO2;
-        public int TiO2;
-        public int Al2O3;
-        public int FeO;
-        public int MnO;
-        public int MgO;
-        public int CaO;
-        public int K2O;
-        public int P2O3;
-        public int other;
+        public double SiO2;
+        public double TiO2;
+        public double Al2O3;
+        public double FeO;
+        public double MnO;
+        public double MgO;
+        public double CaO;
+        public double K2O;
+        public double P2O3;
+        public double other;
     }
 }
 

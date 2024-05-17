@@ -980,7 +980,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5755483009213258492}
         m_TargetAssemblyTypeName: MIKEHUDMessage, Assembly-CSharp
-        m_MethodName: PlayClip
+        m_MethodName: ToggleClip
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -993,7 +993,7 @@ MonoBehaviour:
   pressDirection: 4
   buttonObj: {fileID: 3526194615086328690}
   pressAmount: 0.3
-  toggle: 0
+  toggle: 1
   pressCooldown: 0.5
   highlightImage: {fileID: 4969328564286781465}
 --- !u!65 &3491028314909282257
