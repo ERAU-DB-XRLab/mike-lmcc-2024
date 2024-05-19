@@ -174,6 +174,7 @@ MonoBehaviour:
   upArrow: {fileID: 21300000, guid: f7d21ad6306a8534ca02186c9fbf52f5, type: 3}
   downArrow: {fileID: 21300000, guid: f51bdb9687c53f2409ac3776da692e57, type: 3}
   expandedFade: {fileID: 618121523746387354}
+  taskText: {fileID: 1942381847272603737}
   expandButton: {fileID: 4850191262109894937}
   hiddenParent: {fileID: 1616838741093259329}
   subTaskPrefab: {fileID: 5425734502401284261, guid: 2f5e7c4043e2f6c4697b1198ea198352,
@@ -545,7 +546,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0. Ensure that all switches are set to off
+  m_text: '0: Dummy Step'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 31201d0dcec1f0b4682e866f309fbfad, type: 2}
   m_sharedMaterial: {fileID: 5761198981643261278, guid: 31201d0dcec1f0b4682e866f309fbfad,

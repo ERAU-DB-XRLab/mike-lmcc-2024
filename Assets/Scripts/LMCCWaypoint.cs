@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LMCCWaypoint : MonoBehaviour
@@ -11,12 +12,14 @@ public class LMCCWaypoint : MonoBehaviour
     public int WaypointID { get; set; } = -1;
 
     public Transform Ring { get => ring; }
+    public MIKEWidgetValue WaypointNumber { get => waypointNumber; }
 
     [SerializeField] private LayerMask mapLayer;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Transform icon;
     [SerializeField] private Transform ring;
     [Space]
+    [SerializeField] private MIKEWidgetValue waypointNumber;
     [SerializeField] private float maxRayDistance = 0.2f;
     [SerializeField] private float lineWidth = 0.002f;
     [SerializeField] private float iconOffset = 0.002f;
@@ -116,6 +119,8 @@ public class LMCCWaypoint : MonoBehaviour
             WaypointID = UnityEngine.Random.Range(0, 10000000);
         }
 
+        WaypointNumber.SetValue((++LMCCWaypointSpawner.Main.LMCCWaypointCount).ToString());
+
         // SEND IT TO THE HUD
         SendToHUD();
 
@@ -148,6 +153,7 @@ public class LMCCWaypoint : MonoBehaviour
 
             packet.Write(normalizedPos.x);
             packet.Write(normalizedPos.y);
+            packet.Write(LMCCWaypointSpawner.Main.LMCCWaypointCount);
         }
 
         MIKEServerManager.Main.SendData(ServiceType.Waypoint, packet, DeliveryType.Reliable);

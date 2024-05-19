@@ -34,9 +34,10 @@ public class MIKEWaypointService : MIKEService
             // Parse data
             float xPos = packet.ReadFloat();
             float yPos = packet.ReadFloat();
+            int waypointNum = packet.ReadInt();
 
             Vector3 waypointPos = MIKEMap.Main.GetPositionFromNormalized(new Vector2(xPos, yPos));
-            LMCCWaypointSpawner.Main.SpawnNewHUDWaypoint(waypointID, waypointPos);
+            LMCCWaypointSpawner.Main.SpawnNewHUDWaypoint(waypointID, waypointNum, waypointPos);
         }
         else
         {

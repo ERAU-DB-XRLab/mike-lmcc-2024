@@ -8,8 +8,10 @@ public class LMCCWaypointSpawner : MonoBehaviour
     public static LMCCWaypointSpawner Main { get; private set; }
 
     [SerializeField] private GameObject waypointPrefab;
+    [SerializeField] private GameObject hudWaypointPrefab;
 
     private LMCCWaypoint currWaypoint;
+    public int LMCCWaypointCount { get; set; } = 0;
 
     void Awake()
     {
@@ -48,11 +50,12 @@ public class LMCCWaypointSpawner : MonoBehaviour
     }
 
     // Spawn a new HUD waypoint at a specific position
-    public void SpawnNewHUDWaypoint(int waypointID, Vector3 position)
+    public void SpawnNewHUDWaypoint(int waypointID, int waypointNum, Vector3 position)
     {
-        LMCCWaypoint hudWaypoint = Instantiate(waypointPrefab, this.transform).GetComponent<LMCCWaypoint>();
+        LMCCWaypoint hudWaypoint = Instantiate(hudWaypointPrefab, this.transform).GetComponent<LMCCWaypoint>();
         hudWaypoint.transform.SetParent(MIKEMap.Main.transform);
         hudWaypoint.WaypointID = waypointID;
+        hudWaypoint.WaypointNumber.SetValue(waypointNum.ToString());
         hudWaypoint.transform.position = position;
 
         if (MIKEMap.Main.IsPositionOnMap(hudWaypoint.transform.position, out RaycastHit hit))

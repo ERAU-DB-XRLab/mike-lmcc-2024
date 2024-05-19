@@ -83,7 +83,8 @@ public class TSSManager : MonoBehaviour
 
     void OnDisable()
     {
-        TSSc.DisconnectFromHost();
+        if (TSSc != null)
+            TSSc.DisconnectFromHost();
     }
 
     // Update is called once per frame

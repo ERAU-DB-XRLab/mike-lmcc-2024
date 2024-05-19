@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 8707989692786070660}
   - component: {fileID: 3491028314909282257}
   m_Layer: 3
-  m_Name: HUDMessagePrefab
+  m_Name: HUDMessageBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -20,7 +20,7 @@ public enum UIAType
 
 public class MIKEProcedureManager : MonoBehaviour
 {
-    public delegate void ProcedureStepChanged(ProcedureStep step);
+    public delegate void ProcedureStepChanged(int stepNum, ProcedureStep step);
     public event ProcedureStepChanged OnStepChanged;
 
     public static MIKEProcedureManager Main { get; private set; }
@@ -108,7 +108,7 @@ public class MIKEProcedureManager : MonoBehaviour
                 {
                     currentAutoCompleteStepNum++;
                     CurrentStepNum = currentAutoCompleteStepNum;
-                    OnStepChanged?.Invoke(CurrentStep);
+                    OnStepChanged?.Invoke(CurrentStepNum, CurrentStep);
                 }
 
                 break;
@@ -118,14 +118,15 @@ public class MIKEProcedureManager : MonoBehaviour
 
     public void NextStep()
     {
-        CurrentStepNum++;
-        OnStepChanged?.Invoke(CurrentStep);
+        CurrentStepNum = Mathf.Clamp(CurrentStepNum + 1, 0, StepList.Count - 1);
+        OnStepChanged?.Invoke(CurrentStepNum, CurrentStep);
+        Debug.Log("MIKEProcedureManager: Next Step " + CurrentStepNum);
     }
 
     public void PreviousStep()
     {
-        CurrentStepNum--;
-        OnStepChanged?.Invoke(CurrentStep);
+        CurrentStepNum = Mathf.Clamp(CurrentStepNum - 1, 0, StepList.Count - 1);
+        OnStepChanged?.Invoke(CurrentStepNum, CurrentStep);
     }
 
     private void LoadProcedures()
