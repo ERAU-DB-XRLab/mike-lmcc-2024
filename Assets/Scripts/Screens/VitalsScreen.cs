@@ -76,45 +76,45 @@ public class VitalsScreen : LMCCScreen
 
     private void UpdateVitals(TelemetryData data)
     {
-        batteryTimeLeft.SetValue((float)data.batt_time_left);
-        O2timeLeft.SetValue(data.oxy_time_left);
-        O2PrimaryStorage.SetValue((float)data.oxy_pri_storage);
-        O2PrimaryPressure.SetValue((float)data.oxy_pri_pressure);
-        O2SecondaryStorage.SetValue((float)data.oxy_sec_storage);
-        O2SecondaryPressure.SetValue((float)data.oxy_sec_pressure);
-        coolant.SetValue((float)data.coolant_ml);
+        batteryTimeLeft.SetValue((float)data.YourEVA.batt_time_left);
+        O2timeLeft.SetValue(data.YourEVA.oxy_time_left);
+        O2PrimaryStorage.SetValue((float)data.YourEVA.oxy_pri_storage);
+        O2PrimaryPressure.SetValue((float)data.YourEVA.oxy_pri_pressure);
+        O2SecondaryStorage.SetValue((float)data.YourEVA.oxy_sec_storage);
+        O2SecondaryPressure.SetValue((float)data.YourEVA.oxy_sec_pressure);
+        coolant.SetValue((float)data.YourEVA.coolant_ml);
 
-        heartRate.SetValue((float)data.heart_rate);
-        O2Consumption.SetValue((float)data.oxy_consumption);
-        CO2Production.SetValue((float)data.co2_production);
-        suitO2Pressure.SetValue((float)data.suit_pressure_oxy);
-        suitCO2Pressure.SetValue((float)data.suit_pressure_co2);
-        suitOtherPressure.SetValue((float)data.suit_pressure_other);
-        suitTotalPressure.SetValue((float)data.suit_pressure_total);
-        helmetCO2Pressure.SetValue((float)data.helmet_pressure_co2);
+        heartRate.SetValue((float)data.YourEVA.heart_rate);
+        O2Consumption.SetValue((float)data.YourEVA.oxy_consumption);
+        CO2Production.SetValue((float)data.YourEVA.co2_production);
+        suitO2Pressure.SetValue((float)data.YourEVA.suit_pressure_oxy);
+        suitCO2Pressure.SetValue((float)data.YourEVA.suit_pressure_co2);
+        suitOtherPressure.SetValue((float)data.YourEVA.suit_pressure_other);
+        suitTotalPressure.SetValue((float)data.YourEVA.suit_pressure_total);
+        helmetCO2Pressure.SetValue((float)data.YourEVA.helmet_pressure_co2);
 
-        fanPrimary.SetValue((float)data.fan_pri_rpm);
-        fanSecondary.SetValue((float)data.fan_sec_rpm);
+        fanPrimary.SetValue((float)data.YourEVA.fan_pri_rpm);
+        fanSecondary.SetValue((float)data.YourEVA.fan_sec_rpm);
 
-        scrubberAStorage.SetValue((float)data.scrubber_a_co2_storage);
-        scrubberBStorage.SetValue((float)data.scrubber_b_co2_storage);
-        temperature.SetValue((float)data.temperature);
-        coolantGasPressure.SetValue((float)data.coolant_gas_pressure);
-        coolantLiquidPressure.SetValue((float)data.coolant_liquid_pressure);
+        scrubberAStorage.SetValue((float)data.YourEVA.scrubber_a_co2_storage);
+        scrubberBStorage.SetValue((float)data.YourEVA.scrubber_b_co2_storage);
+        temperature.SetValue((float)data.YourEVA.temperature);
+        coolantGasPressure.SetValue((float)data.YourEVA.coolant_gas_pressure);
+        coolantLiquidPressure.SetValue((float)data.YourEVA.coolant_liquid_pressure);
     }
 
     private void UpdateIconVitals(TelemetryData data)
     {
-        heartRateIcon.SetValue((float)data.heart_rate);
-        o2StorageIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.Oxygen].GetActiveStatus() == "Primary Tank" ? (float)data.oxy_pri_storage : (float)data.oxy_sec_storage);
-        suitPSIIcon.SetValue((float)data.suit_pressure_total);
-        o2PSIIcon.SetValue((float)data.suit_pressure_oxy);
-        co2PSIIcon.SetValue((float)data.suit_pressure_co2);
-        otherPSIIcon.SetValue((float)data.suit_pressure_other);
-        fanRPMIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Primary Fan" ? (float)data.fan_pri_rpm / 1000f : (float)data.fan_sec_rpm / 1000f);
-        temperatureIcon.SetValue((float)data.temperature);
-        helmetCO2Icon.SetValue((float)data.helmet_pressure_co2);
-        scrubberCO2StorageIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber A" ? (float)data.scrubber_a_co2_storage : (float)data.scrubber_b_co2_storage);
+        heartRateIcon.SetValue((float)data.YourEVA.heart_rate);
+        o2StorageIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.Oxygen].GetActiveStatus() == "Primary Tank" ? (float)data.YourEVA.oxy_pri_storage : (float)data.YourEVA.oxy_sec_storage);
+        suitPSIIcon.SetValue((float)data.YourEVA.suit_pressure_total);
+        o2PSIIcon.SetValue((float)data.YourEVA.suit_pressure_oxy);
+        co2PSIIcon.SetValue((float)data.YourEVA.suit_pressure_co2);
+        otherPSIIcon.SetValue((float)data.YourEVA.suit_pressure_other);
+        fanRPMIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Primary Fan" ? (float)data.YourEVA.fan_pri_rpm / 1000f : (float)data.YourEVA.fan_sec_rpm / 1000f);
+        temperatureIcon.SetValue((float)data.YourEVA.temperature);
+        helmetCO2Icon.SetValue((float)data.YourEVA.helmet_pressure_co2);
+        scrubberCO2StorageIcon.SetValue(MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber A" ? (float)data.YourEVA.scrubber_a_co2_storage : (float)data.YourEVA.scrubber_b_co2_storage);
     }
 
     private void UpdateActiveDevices(DCUData data)

@@ -11,7 +11,7 @@ public class MIKEIntro : MonoBehaviour
 
     public void Play()
     {
-        mainObjects.ForEach(o => o.SetActive(false));
+        mainObjects?.ForEach(o => o.SetActive(false));
         dissipate = GetComponentsInChildren<Dissipate>();
         foreach (Dissipate d in dissipate)
         {
@@ -23,7 +23,7 @@ public class MIKEIntro : MonoBehaviour
     public IEnumerator ShowApp()
     {
         yield return new WaitForSeconds(3.5f);
-        mainObjects.ForEach(o => o.SetActive(true));
+        mainObjects?.ForEach(o => o.SetActive(true));
         Complete = true;
     }
 

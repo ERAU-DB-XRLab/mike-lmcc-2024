@@ -58,57 +58,57 @@ public class MIKEAlertManager : MonoBehaviour
 
     private void CheckForAlerts(TelemetryData data)
     {
-        if (Alerts[AlertType.HeartRate].CheckAlert((float)data.heart_rate))
+        if (Alerts[AlertType.HeartRate].CheckAlert((float)data.YourEVA.heart_rate))
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.HeartRate].GetAlertMessage((float)data.heart_rate), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.HeartRate].GetAlertMessage((float)data.YourEVA.heart_rate), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.O2SuitPressure].CheckAlert((float)data.suit_pressure_oxy))
+        if (Alerts[AlertType.O2SuitPressure].CheckAlert((float)data.YourEVA.suit_pressure_oxy))
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.O2SuitPressure].GetAlertMessage((float)data.suit_pressure_oxy), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.O2SuitPressure].GetAlertMessage((float)data.YourEVA.suit_pressure_oxy), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.CO2SuitPressure].CheckAlert((float)data.suit_pressure_co2))
+        if (Alerts[AlertType.CO2SuitPressure].CheckAlert((float)data.YourEVA.suit_pressure_co2))
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2SuitPressure].GetAlertMessage((float)data.suit_pressure_co2), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2SuitPressure].GetAlertMessage((float)data.YourEVA.suit_pressure_co2), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.OtherSuitPressure].CheckAlert((float)data.suit_pressure_other))
+        if (Alerts[AlertType.OtherSuitPressure].CheckAlert((float)data.YourEVA.suit_pressure_other))
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.OtherSuitPressure].GetAlertMessage((float)data.suit_pressure_other), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.OtherSuitPressure].GetAlertMessage((float)data.YourEVA.suit_pressure_other), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.TotalSuitPressure].CheckAlert((float)data.suit_pressure_total))
+        if (Alerts[AlertType.TotalSuitPressure].CheckAlert((float)data.YourEVA.suit_pressure_total))
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.TotalSuitPressure].GetAlertMessage((float)data.suit_pressure_total), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.TotalSuitPressure].GetAlertMessage((float)data.YourEVA.suit_pressure_total), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.CO2HelmetPressure].CheckAlert((float)data.helmet_pressure_co2))
+        if (Alerts[AlertType.CO2HelmetPressure].CheckAlert((float)data.YourEVA.helmet_pressure_co2))
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2HelmetPressure].GetAlertMessage((float)data.helmet_pressure_co2), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2HelmetPressure].GetAlertMessage((float)data.YourEVA.helmet_pressure_co2), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.PrimaryFanRPM].CheckAlert((float)data.fan_pri_rpm) && MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Primary Fan") // Special case for primary fan
+        if (Alerts[AlertType.PrimaryFanRPM].CheckAlert((float)data.YourEVA.fan_pri_rpm) && MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Primary Fan") // Special case for primary fan
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.PrimaryFanRPM].GetAlertMessage((float)data.fan_pri_rpm), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.PrimaryFanRPM].GetAlertMessage((float)data.YourEVA.fan_pri_rpm), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
-        else if (Alerts[AlertType.SecondaryFanRPM].CheckAlert((float)data.fan_sec_rpm) && MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Secondary Fan") // Special case for secondary fan
+        else if (Alerts[AlertType.SecondaryFanRPM].CheckAlert((float)data.YourEVA.fan_sec_rpm) && MIKESystemManager.Main.SystemStatuses[SystemType.Fan].GetActiveStatus() == "Secondary Fan") // Special case for secondary fan
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.SecondaryFanRPM].GetAlertMessage((float)data.fan_sec_rpm), MIKEResources.Main.NegativeNotificationColor, 5f);
-        }
-
-        if (Alerts[AlertType.CO2ScrubberAStorage].CheckAlert((float)data.scrubber_a_co2_storage) && MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber A") // Special case for scrubber A
-        {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2ScrubberAStorage].GetAlertMessage((float)data.scrubber_a_co2_storage), MIKEResources.Main.NegativeNotificationColor, 5f);
-        }
-        else if (Alerts[AlertType.CO2ScrubberBStorage].CheckAlert((float)data.scrubber_b_co2_storage) && MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber B") // Special case for scrubber B
-        {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2ScrubberBStorage].GetAlertMessage((float)data.scrubber_b_co2_storage), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.SecondaryFanRPM].GetAlertMessage((float)data.YourEVA.fan_sec_rpm), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
 
-        if (Alerts[AlertType.Temperature].CheckAlert((float)data.temperature))
+        if (Alerts[AlertType.CO2ScrubberAStorage].CheckAlert((float)data.YourEVA.scrubber_a_co2_storage) && MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber A") // Special case for scrubber A
         {
-            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.Temperature].GetAlertMessage((float)data.temperature), MIKEResources.Main.NegativeNotificationColor, 5f);
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2ScrubberAStorage].GetAlertMessage((float)data.YourEVA.scrubber_a_co2_storage), MIKEResources.Main.NegativeNotificationColor, 5f);
+        }
+        else if (Alerts[AlertType.CO2ScrubberBStorage].CheckAlert((float)data.YourEVA.scrubber_b_co2_storage) && MIKESystemManager.Main.SystemStatuses[SystemType.CO2].GetActiveStatus() == "Scrubber B") // Special case for scrubber B
+        {
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.CO2ScrubberBStorage].GetAlertMessage((float)data.YourEVA.scrubber_b_co2_storage), MIKEResources.Main.NegativeNotificationColor, 5f);
+        }
+
+        if (Alerts[AlertType.Temperature].CheckAlert((float)data.YourEVA.temperature))
+        {
+            MIKENotificationManager.Main.SendNotification("ALERT", Alerts[AlertType.Temperature].GetAlertMessage((float)data.YourEVA.temperature), MIKEResources.Main.NegativeNotificationColor, 5f);
         }
     }
 }

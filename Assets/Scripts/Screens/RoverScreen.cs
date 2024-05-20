@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class RoverScreen : LMCCScreen
 {
+    public string RoverCamUrl { get { return roverCamUrl; } set { roverCamUrl = value; } }
     [SerializeField] private string roverCamUrl;
     [SerializeField] private RawImage roverCamImage;
     [SerializeField] private float framesPerSecond = 30f;
@@ -14,6 +15,12 @@ public class RoverScreen : LMCCScreen
     [SerializeField] private MIKEWidgetValue roverX;
     [SerializeField] private MIKEWidgetValue roverY;
     [SerializeField] private MIKEWidgetValue qrID;
+    [Space]
+    [SerializeField] private MenuButton switchButton;
+
+    private bool normalCamView = true;
+    string nativeFeed = "/native_feed";
+    string thermalFeed = "/thermal_feed";
 
     private Texture2D roverCamTexture;
 
@@ -22,11 +29,13 @@ public class RoverScreen : LMCCScreen
     {
         StartCoroutine(GetCameraFeed());
         TSSManager.Main.OnRoverUpdated += UpdateRover;
+        switchButton.ValueChanged.AddListener((b) => { if (b) normalCamView = !normalCamView; });
     }
 
     void OnEnable()
     {
         UpdateRover(TSSManager.Main.RoverData);
+        normalCamView = true;
     }
 
     private void UpdateRover(RoverData data)
@@ -40,7 +49,7 @@ public class RoverScreen : LMCCScreen
     {
         while (true)
         {
-            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(roverCamUrl))
+            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(roverCamUrl + (normalCamView ? nativeFeed : thermalFeed)))
             {
                 yield return www.SendWebRequest();
 

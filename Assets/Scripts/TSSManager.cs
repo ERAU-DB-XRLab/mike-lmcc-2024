@@ -81,6 +81,12 @@ public class TSSManager : MonoBehaviour
         TSSc.ConnectToHost(host, MIKEResources.Main.TeamNumber);
     }
 
+    public void Connect(string host)
+    {
+        Host = host;
+        TSSc.ConnectToHost(host, MIKEResources.Main.TeamNumber);
+    }
+
     void OnDisable()
     {
         if (TSSc != null)
@@ -127,9 +133,9 @@ public class TSSManager : MonoBehaviour
         if (TSSc.isTELEMETRYUpdated())
         {
             //Debug.Log("TELEMETRY Updated");
-            Telemetry_EVAData temp = JsonConvert.DeserializeObject<TelemetryWrapper>(TSSc.GetTELEMETRYJsonString()).telemetry;
-            EVATime = temp.eva_time;
-            TelemetryData = CurrentEVA == EVA.EVA1 ? temp.eva1 : temp.eva2;
+            TelemetryData = JsonConvert.DeserializeObject<TelemetryWrapper>(TSSc.GetTELEMETRYJsonString()).telemetry;
+            EVATime = TelemetryData.eva_time;
+            Debug.Log("EVA Time: " + EVATime);
             OnTelemetryUpdated?.Invoke(TelemetryData);
         }
 
@@ -254,42 +260,60 @@ public class SpecData
 
 public class TelemetryWrapper
 {
-    public Telemetry_EVAData telemetry;
-}
-
-[Serializable]
-public class Telemetry_EVAData
-{
-    public double eva_time;
-    public TelemetryData eva1;
-    public TelemetryData eva2;
+    public TelemetryData telemetry;
 }
 
 [Serializable]
 public class TelemetryData
 {
-    public double batt_time_left;
-    public double oxy_pri_storage;
-    public double oxy_sec_storage;
-    public double oxy_pri_pressure;
-    public double oxy_sec_pressure;
-    public int oxy_time_left;
-    public double heart_rate;
-    public double oxy_consumption;
-    public double co2_production;
-    public double suit_pressure_oxy;
-    public double suit_pressure_co2;
-    public double suit_pressure_other;
-    public double suit_pressure_total;
-    public double fan_pri_rpm;
-    public double fan_sec_rpm;
-    public double helmet_pressure_co2;
-    public double scrubber_a_co2_storage;
-    public double scrubber_b_co2_storage;
-    public double temperature;
-    public double coolant_ml;
-    public double coolant_gas_pressure;
-    public double coolant_liquid_pressure;
+    public double eva_time;
+
+    [JsonRequired]
+    public Data eva1;
+    [JsonRequired]
+    public Data eva2;
+
+    public class Data
+    {
+        public double batt_time_left;
+        public double oxy_pri_storage;
+        public double oxy_sec_storage;
+        public double oxy_pri_pressure;
+        public double oxy_sec_pressure;
+        public int oxy_time_left;
+        public double heart_rate;
+        public double oxy_consumption;
+        public double co2_production;
+        public double suit_pressure_oxy;
+        public double suit_pressure_co2;
+        public double suit_pressure_other;
+        public double suit_pressure_total;
+        public double fan_pri_rpm;
+        public double fan_sec_rpm;
+        public double helmet_pressure_co2;
+        public double scrubber_a_co2_storage;
+        public double scrubber_b_co2_storage;
+        public double temperature;
+        public double coolant_ml;
+        public double coolant_gas_pressure;
+        public double coolant_liquid_pressure;
+    }
+
+    public Data YourEVA
+    {
+        get
+        {
+            return TSSManager.Main.CurrentEVA == EVA.EVA1 ? eva1 : eva2;
+        }
+    }
+
+    public Data OtherEVA
+    {
+        get
+        {
+            return TSSManager.Main.CurrentEVA == EVA.EVA1 ? eva2 : eva1;
+        }
+    }
 }
 
 public class CommWrapper

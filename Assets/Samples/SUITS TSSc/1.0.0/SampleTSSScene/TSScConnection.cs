@@ -10,7 +10,7 @@ public class TSScConnection : MonoBehaviour
     string port;
     string url;
     int team_number;
-    public bool connected;
+    [HideInInspector] public bool connected;
     float time_since_last_update;
 
     // Database Jsons
