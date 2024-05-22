@@ -37,6 +37,7 @@ public class MIKEWaypointService : MIKEService
             int waypointNum = packet.ReadInt();
 
             Vector3 waypointPos = MIKEMap.Main.GetPositionFromNormalized(new Vector2(xPos, yPos));
+            MIKENotificationManager.Main.SendNotification("NOTIFICATION", "Waypoint received from HUD", MIKEResources.Main.PositiveNotificationColor, 5f);
             LMCCWaypointSpawner.Main.SpawnNewHUDWaypoint(waypointID, waypointNum, waypointPos);
         }
         else

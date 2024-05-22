@@ -17,6 +17,8 @@ public class SettingsScreen : LMCCScreen
     [SerializeField] private MenuButton submitButton;
     [SerializeField] private MenuButton evaButton;
 
+    private string savedEVA;
+
     public MenuInput CurrentInput { get; private set; }
 
     // Start is called before the first frame update
@@ -51,18 +53,21 @@ public class SettingsScreen : LMCCScreen
         inputFields[(int)MenuInputField.HUD].InputText = MIKEServerManager.Main.OtherIP;
         inputFields[(int)MenuInputField.TSS].InputText = TSSManager.Main.Host;
         inputFields[(int)MenuInputField.ROVER].InputText = ((RoverScreen)LMCCMenuSpawner.Main.Menus[(int)ScreenType.Rover].CurrentScreen).RoverCamUrl.Replace(":5000", "");
+        evaButton.GetComponentInChildren<TMP_Text>().text = TSSManager.Main.CurrentEVA == EVA.EVA1 ? "1" : "2";
     }
 
     public void SwitchEva(EVA eva)
     {
         if (eva == EVA.EVA1)
         {
-            TSSManager.Main.CurrentEVA = EVA.EVA2;
+            //TSSManager.Main.CurrentEVA = EVA.EVA2;
+            savedEVA = "2";
             evaButton.GetComponentInChildren<TMP_Text>().text = "2";
         }
         else
         {
-            TSSManager.Main.CurrentEVA = EVA.EVA1;
+            //TSSManager.Main.CurrentEVA = EVA.EVA1;
+            savedEVA = "1";
             evaButton.GetComponentInChildren<TMP_Text>().text = "1";
         }
     }
@@ -85,11 +90,12 @@ public class SettingsScreen : LMCCScreen
 
     public void UpdateAll()
     {
+        MIKESettingsManager.Main.SaveToJSON(inputFields[(int)MenuInputField.HUD].InputText, inputFields[(int)MenuInputField.TSS].InputText, inputFields[(int)MenuInputField.ROVER].InputText, savedEVA);
         // Update HUD
-        MIKEServerManager.Main.SetEndPoint(inputFields[(int)MenuInputField.HUD].InputText);
+        //MIKEServerManager.Main.SetEndPoint(inputFields[(int)MenuInputField.HUD].InputText);
         // Update TSS
-        TSSManager.Main.Connect(inputFields[(int)MenuInputField.TSS].InputText);
+        //TSSManager.Main.Connect(inputFields[(int)MenuInputField.TSS].InputText);
         // Update Rover
-        ((RoverScreen)LMCCMenuSpawner.Main.Menus[(int)ScreenType.Rover].CurrentScreen).RoverCamUrl = inputFields[(int)MenuInputField.ROVER].InputText + ":5000";
+        //((RoverScreen)LMCCMenuSpawner.Main.Menus[(int)ScreenType.Rover].CurrentScreen).RoverCamUrl = inputFields[(int)MenuInputField.ROVER].InputText + ":5000";
     }
 }

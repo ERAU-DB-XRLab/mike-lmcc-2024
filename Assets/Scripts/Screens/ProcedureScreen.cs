@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ProcedureScreen : LMCCScreen
 {
+    [SerializeField] private GameObject taskTitle;
     [SerializeField] private GameObject taskPrefab;
     [SerializeField] private Transform taskParent;
 
@@ -13,6 +14,7 @@ public class ProcedureScreen : LMCCScreen
     [SerializeField] private MenuButton previousButton;
 
     private List<MIKETaskBlock> taskBlocks = new List<MIKETaskBlock>();
+    private List<GameObject> taskTitles = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -37,10 +39,12 @@ public class ProcedureScreen : LMCCScreen
 
     private void UpdateSteps(int currentStepNum, ProcedureStep step)
     {
-        Debug.Log("ProcedureScreen: Updating steps");
         foreach (MIKETaskBlock task in taskBlocks)
         {
-            task.ChangeStepNumber(currentStepNum);
+            if (task != null)
+            {
+                task.ChangeStepNumber(currentStepNum);
+            }
         }
     }
 
@@ -52,10 +56,21 @@ public class ProcedureScreen : LMCCScreen
         for (int i = 0; i < MIKEProcedureManager.Main.StepList.Count; i++)
         {
             ProcedureStep step = MIKEProcedureManager.Main.StepList[i];
+            if (step.step_number == null)
+            {
+                Debug.Log("Bruh Title" + i);
+                GameObject title = Instantiate(taskTitle, taskParent);
+                title.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = step.description;
+                taskBlocks.Add(null);
+                taskTitles.Add(title);
+                continue;
+            }
+
             if (step.IsRootStep)
             {
                 if (currTask != null)
                 {
+                    Debug.Log("Bruh Root" + i);
                     currTask.Initialize(currStep);
                 }
 
@@ -106,8 +121,17 @@ public class ProcedureScreen : LMCCScreen
     {
         foreach (MIKETaskBlock task in taskBlocks)
         {
-            Destroy(task.gameObject);
+            if (task != null)
+            {
+                Destroy(task.gameObject);
+            }
         }
         taskBlocks.Clear();
+
+        foreach (GameObject title in taskTitles)
+        {
+            Destroy(title);
+        }
+        taskTitles.Clear();
     }
 }

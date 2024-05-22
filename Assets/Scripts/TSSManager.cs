@@ -72,13 +72,14 @@ public class TSSManager : MonoBehaviour
             Main = this;
         else
             Destroy(this.gameObject);
+
+        TSSc = GetComponent<TSScConnection>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        TSSc = GetComponent<TSScConnection>();
-        TSSc.ConnectToHost(host, MIKEResources.Main.TeamNumber);
+        //TSSc.ConnectToHost(host, MIKEResources.Main.TeamNumber);
     }
 
     public void Connect(string host)
@@ -135,7 +136,6 @@ public class TSSManager : MonoBehaviour
             //Debug.Log("TELEMETRY Updated");
             TelemetryData = JsonConvert.DeserializeObject<TelemetryWrapper>(TSSc.GetTELEMETRYJsonString()).telemetry;
             EVATime = TelemetryData.eva_time;
-            Debug.Log("EVA Time: " + EVATime);
             OnTelemetryUpdated?.Invoke(TelemetryData);
         }
 

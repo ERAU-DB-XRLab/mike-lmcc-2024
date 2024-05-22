@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MIKESpecBlock : MonoBehaviour
+public class MIKESpecBlock : MIKEExpandingBlock
 {
     public SpecData SpecData { get; set; }
 
@@ -22,28 +22,18 @@ public class MIKESpecBlock : MonoBehaviour
     [SerializeField] private MIKEWidgetValue mgoValue;
     [SerializeField] private MIKEWidgetValue k2oValue;
     [SerializeField] private MIKEWidgetValue otherValue;
-    [Space]
-    [SerializeField] private Image expandedBackground;
-    [SerializeField] private Image buttonIcon;
-    [SerializeField] private Sprite upArrow;
-    [SerializeField] private Sprite downArrow;
-
-    private LMCCFadeBehavior expandedFade;
-    private ContentSizeFitter fitter;
-
-    private float startingHeight = 100, endingHeight = 250;
-    private bool expanded = false;
-
-    void Awake()
-    {
-        fitter = GetComponentInParent<ContentSizeFitter>();
-    }
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        expandedFade = GetComponentInChildren<LMCCFadeBehavior>();
-        expandedBackground.CrossFadeAlpha(0f, 0f, false);
+        base.Start();
+        Invoke("HideAfterDelay", 0.01f);
+    }
+
+    // Shits cringe i know but it works
+    private void HideAfterDelay()
+    {
+        expandedFade.ReInitialize();
     }
 
     public void DisplaySpecData()
@@ -64,68 +54,5 @@ public class MIKESpecBlock : MonoBehaviour
         mgoValue.SetValue((float)SpecData.data.MgO, MIKEResources.Main.PositiveNotificationColor);
         k2oValue.SetValue((float)SpecData.data.K2O, MIKEResources.Main.PositiveNotificationColor);
         otherValue.SetValue((float)SpecData.data.other, MIKEResources.Main.PositiveNotificationColor);
-    }
-
-    public void ToggleExpanded()
-    {
-        SetExpanded(!expanded);
-    }
-
-    public void SetExpanded(bool value)
-    {
-        if (value)
-        {
-            StopCoroutine(Contract());
-            StartCoroutine(Expand());
-            buttonIcon.sprite = upArrow;
-        }
-        else
-        {
-            StopCoroutine(Expand());
-            StartCoroutine(Contract());
-            buttonIcon.sprite = downArrow;
-        }
-    }
-
-    private IEnumerator Expand()
-    {
-        RectTransform t = (RectTransform)transform;
-        float width = t.sizeDelta.x;
-        float timeToExpand = 0.3f;
-        int stepCount = 20;
-
-        for (int i = 0; i < stepCount; i++)
-        {
-            yield return new WaitForSeconds(timeToExpand / stepCount);
-            float newHeight = Mathf.Lerp(startingHeight, endingHeight, i / (float)stepCount);
-            t.sizeDelta = new Vector2(width, newHeight);
-            fitter.enabled = false;
-            fitter.enabled = true;
-        }
-
-        expandedFade.Display(true);
-        expandedBackground.CrossFadeAlpha(1f, 0.1f, false);
-        expanded = true;
-    }
-
-    private IEnumerator Contract()
-    {
-        expandedBackground.CrossFadeAlpha(0f, 0.1f, false);
-        expandedFade.Display(false, () => expanded = false);
-        yield return new WaitUntil(() => !expanded);
-
-        RectTransform t = (RectTransform)transform;
-        float width = t.sizeDelta.x;
-        float timeToExpand = 0.3f;
-        int stepCount = 20;
-
-        for (int i = 0; i < stepCount; i++)
-        {
-            yield return new WaitForSeconds(timeToExpand / stepCount);
-            float newHeight = Mathf.Lerp(endingHeight, startingHeight, i / (float)stepCount);
-            t.sizeDelta = new Vector2(width, newHeight);
-            fitter.enabled = false;
-            fitter.enabled = true;
-        }
     }
 }

@@ -23,7 +23,6 @@ public class MIKETaskBlock : MIKEExpandingBlock
     protected override void Start()
     {
         base.Start();
-        startingHeight = 85;
     }
 
     public override void ToggleExpanded()
@@ -38,12 +37,13 @@ public class MIKETaskBlock : MIKEExpandingBlock
 
     public void Initialize(ProcedureStep step)
     {
+        startingHeight = 85;
         taskText.text = step.step_number + ": " + step.description;
         initialColor = taskText.color;
-        endingHeight = startingHeight + (subTasks.Count * 35);
+        endingHeight = startingHeight + (subTasks.Count * 40);
         hiddenParent.transform.localPosition = new Vector3(hiddenParent.transform.localPosition.x, hiddenParent.transform.localPosition.y + subTasks.Count, hiddenParent.transform.localPosition.z);
-        expandedBackground.rectTransform.sizeDelta = new Vector2(expandedBackground.rectTransform.sizeDelta.x, endingHeight * 0.82f);
-        expandedFade.ReInitialize();
+        //expandedBackground.rectTransform.sizeDelta = new Vector2(expandedBackground.rectTransform.sizeDelta.x, endingHeight * 0.82f);
+        Invoke("HideAfterDelay", 0.01f);
 
         if (subTasks.Count > 0)
         {
@@ -53,6 +53,12 @@ public class MIKETaskBlock : MIKEExpandingBlock
         {
             expandButton.gameObject.SetActive(false);
         }
+    }
+
+    // Shits cringe i know but it works
+    private void HideAfterDelay()
+    {
+        expandedFade.ReInitialize();
     }
 
     public void AddTask(ProcedureStep step)

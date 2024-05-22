@@ -25,6 +25,8 @@ public class MIKEAstronautService : MIKEService
     {
         Vector3 originalHeadPos = packet.ReadVector3();
 
+        Debug.Log("Astronaut Data Received");
+
         if (MIKEMap.Main.IsPositionOnMap(MIKEMap.Main.transform.TransformPoint(originalHeadPos), out RaycastHit hitInfo))
         {
             if (currAstronaut == null)

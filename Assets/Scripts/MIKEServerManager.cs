@@ -21,8 +21,9 @@ public class MIKEServerManager : MonoBehaviour
     public bool Connected { get; private set; } = true;
 
     private Socket socket;
+    public IPEndPoint EndPoint { get { return endPoint; } }
     private IPEndPoint endPoint;
-    private byte[] buffer = new byte[16384];
+    private byte[] buffer = new byte[65536];
     private Queue<byte[]> dataToReceive = new Queue<byte[]>();
     private bool tasksRunning;
 
@@ -65,6 +66,7 @@ public class MIKEServerManager : MonoBehaviour
     public void StartServer()
     {
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        socket.ReceiveBufferSize = 65536 * 2;
         socket.Bind(new IPEndPoint(IPAddress.Any, receivePort));
         tasksRunning = true;
         ReceiveData();
@@ -120,10 +122,10 @@ public class MIKEServerManager : MonoBehaviour
             Debug.Log("Receiving data...");
             MIKEInputManager.Main.ReceiveInput(dataToReceive.TryDequeue(out byte[] data) ? data : null);
 
-            /*if (dataToReceive.Count > 40)
+            if (dataToReceive.Count > 40)
             {
                 dataToReceive.Clear();
-            }*/
+            }
         }
     }
 

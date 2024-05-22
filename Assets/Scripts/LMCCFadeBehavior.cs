@@ -25,7 +25,9 @@ public class LMCCFadeBehavior : MonoBehaviour
             graphics.Add(graphic);
 
             if (!startVisible)
+            {
                 graphic.CrossFadeAlpha(0f, 0f, true);
+            }
         }
     }
 

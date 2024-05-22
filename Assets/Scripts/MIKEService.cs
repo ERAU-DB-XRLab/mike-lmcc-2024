@@ -8,6 +8,7 @@ public enum ServiceType
     Waypoint = 6,
     Astronaut = 7,
     Camera = 8,
+    Hand = 15
 }
 
 public abstract class MIKEService : MonoBehaviour

@@ -93,6 +93,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eabe7826bf6704848ac7a92b8cdbd01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expandedBackground: {fileID: 2883975186260812348}
+  buttonIcon: {fileID: 412754882596623944}
+  upArrow: {fileID: 21300000, guid: f7d21ad6306a8534ca02186c9fbf52f5, type: 3}
+  downArrow: {fileID: 21300000, guid: f51bdb9687c53f2409ac3776da692e57, type: 3}
+  expandedFade: {fileID: 1463497335027986615}
   specName: {fileID: 8839016990691325083}
   specID: {fileID: 3849130135582433184}
   sio2Value: {fileID: 2292561648838830114}
@@ -105,10 +110,6 @@ MonoBehaviour:
   mgoValue: {fileID: 7634676768079024108}
   k2oValue: {fileID: 2803994909358949921}
   otherValue: {fileID: 7204157007775328766}
-  expandedBackground: {fileID: 2883975186260812348}
-  buttonIcon: {fileID: 412754882596623944}
-  upArrow: {fileID: 21300000, guid: f7d21ad6306a8534ca02186c9fbf52f5, type: 3}
-  downArrow: {fileID: 21300000, guid: f51bdb9687c53f2409ac3776da692e57, type: 3}
 --- !u!1 &443766241299832823
 GameObject:
   m_ObjectHideFlags: 0

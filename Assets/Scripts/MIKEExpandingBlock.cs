@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class MIKEExpandingBlock : MonoBehaviour
 {
     [SerializeField] protected Image expandedBackground;
-    [SerializeField] private Image buttonIcon;
-    [SerializeField] private Sprite upArrow;
-    [SerializeField] private Sprite downArrow;
+    [SerializeField] protected Image buttonIcon;
+    [SerializeField] protected Sprite upArrow;
+    [SerializeField] protected Sprite downArrow;
+    public LMCCFadeBehavior ExpandedFade { get; private set; }
     [SerializeField] protected LMCCFadeBehavior expandedFade;
 
     protected ContentSizeFitter fitter;
@@ -16,7 +17,7 @@ public class MIKEExpandingBlock : MonoBehaviour
     protected float startingHeight = 100;
     protected float endingHeight = 250;
 
-    private bool expanded = false;
+    protected bool expanded = false;
 
     protected virtual void Awake()
     {

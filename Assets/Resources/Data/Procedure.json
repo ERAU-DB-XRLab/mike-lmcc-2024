@@ -1,41 +1,464 @@
 {
     "steps": [
         {
-            "step_number": "0",
-            "description": "Ensure that all switches are set to off"
+            "description": "EVA Egress"
         },
         {
             "step_number": "1",
-            "description": "Power on EMU-1",
+            "description": "Connect UIA to DCU and start Depress",
             "sub_steps": [
                 {
                     "step_number": "1.1",
-                    "description": "Switch EMU-1 Power to ON",
-                    "autocomplete": "EMU1_POWER,ON"
+                    "description": "UIA and DCU: EV1 and EV2 connect UIA and DCU umbilica"
                 },
                 {
                     "step_number": "1.2",
-                    "description": "When the SUIT is booted (emu1_is_booted), proceed"
+                    "description": "UIA: EV-1, EV-2 PWR – ON"
+                },
+                {
+                    "step_number": "1.3",
+                    "description": "BOTH DCU: BATT – UMB"
+                },
+                {
+                    "step_number": "1.4",
+                    "description": "UIA: DEPRESS PUMP PWR – ON"
                 }
             ]
         },
         {
             "step_number": "2",
-            "description": "Prepare UIA",
+            "description": "Prep O2 Tanks",
             "sub_steps": [
                 {
                     "step_number": "2.1",
-                    "description": "Switch O2 Vent to OPEN",
-                    "autocomplete": "O2_Vent,OPEN"
+                    "description": "UIA: OXYGEN O2 VENT – OPEN"
                 },
                 {
                     "step_number": "2.2",
-                    "description": "When UIA Supply Pressure (uia_ < 23 psi, proceed"
+                    "description": "HMD: Wait until both Primary and Secondary OXY tanks are < 10psi"
                 },
                 {
                     "step_number": "2.3",
-                    "description": "Switch O2 Vent to CLOSE",
-                    "autocomplete": "O2_Vent,CLOSE"
+                    "description": "UIA: OXYGEN O2 VENT – CLOSE"
+                },
+                {
+                    "step_number": "2.4",
+                    "description": "BOTH DCU: OXY – PRI"
+                },
+                {
+                    "step_number": "2.5",
+                    "description": "UIA: OXYGEN EMU-1, EMU-2 – OPEN"
+                },
+                {
+                    "step_number": "2.6",
+                    "description": "HMD: Wait until EV1 and EV2 Primary O2 tanks > 3000 psi"
+                },
+                {
+                    "step_number": "2.7",
+                    "description": "UIA: OXYGEN EMU-1, EMU-2 – CLOSE"
+                },
+                {
+                    "step_number": "2.8",
+                    "description": "BOTH DCU: OXY – SEC"
+                },
+                {
+                    "step_number": "2.9",
+                    "description": "UIA: OXYGEN EMU-1, EMU-2 – OPEN"
+                },
+                {
+                    "step_number": "2.10",
+                    "description": "HMD: Wait until EV1 and EV2 Secondary O2 tanks > 3000 psi"
+                },
+                {
+                    "step_number": "2.11",
+                    "description": "UIA: OXYGEN EMU-1, EMU-2 – CLOSE"
+                },
+                {
+                    "step_number": "2.12",
+                    "description": "BOTH DCU: OXY – PRI"
+                }
+            ]
+        },
+        {
+            "step_number": "3",
+            "description": "Prep Water Tanks",
+            "sub_steps": [
+                {
+                    "step_number": "3.1",
+                    "description": "BOTH DCU: PUMP – OPEN"
+                },
+                {
+                    "step_number": "3.2",
+                    "description": "UIA: EV-1, EV-2 WASTE WATER – OPEN"
+                },
+                {
+                    "step_number": "3.3",
+                    "description": "HMD: Wait until water EV1 and EV2 Coolant tank is < 5%"
+                },
+                {
+                    "step_number": "3.4",
+                    "description": "UIA: EV-1, EV-2 WASTE WATER – CLOSE"
+                },
+                {
+                    "step_number": "3.5",
+                    "description": "UIA: EV-1, EV-2 SUPPLY WATER – OPEN"
+                },
+                {
+                    "step_number": "3.6",
+                    "description": "HMD: Wait until water EV1 and EV2 Coolant tank is > 95%"
+                },
+                {
+                    "step_number": "3.7",
+                    "description": "UIA: EV-1, EV-2 SUPPLY WATER – CLOSE"
+                },
+                {
+                    "step_number": "3.8",
+                    "description": "BOTH DCU: PUMP – CLOSE"
+                }
+            ]
+        },
+        {
+            "step_number": "4",
+            "description": "END Depress, Check Switches and Disconnect",
+            "sub_steps": [
+                {
+                    "step_number": "4.1",
+                    "description": "HMD: Wait until SUIT P, O2 P = 4"
+                },
+                {
+                    "step_number": "4.2",
+                    "description": "UIA: DEPRESS PUMP PWR – OFF"
+                },
+                {
+                    "step_number": "4.3",
+                    "description": "BOTH DCU: BATT – LOCAL"
+                },
+                {
+                    "step_number": "4.4",
+                    "description": "UIA: EV-1, EV-2 PWR - OFF"
+                },
+                {
+                    "step_number": "4.5",
+                    "description": "BOTH DCU: Verify OXY – PRI"
+                },
+                {
+                    "step_number": "4.6",
+                    "description": "BOTH DCU: Verify COMMS – A"
+                },
+                {
+                    "step_number": "4.7",
+                    "description": "BOTH DCU: Verify FAN – PRI"
+                },
+                {
+                    "step_number": "4.8",
+                    "description": "BOTH DCU: Verify PUMP – CLOSE"
+                },
+                {
+                    "step_number": "4.9",
+                    "description": "BOTH DCU: Verify CO2 – A"
+                },
+                {
+                    "step_number": "4.10",
+                    "description": "UIA and DCU: EV1 and EV2 disconnect UIA and DCU umbilical"
+                }
+            ]
+        },
+        {
+            "description": "Comm Tower"
+        },
+        {
+            "step_number": "1",
+            "description": "Navigation",
+            "sub_steps": [
+                {
+                    "step_number": "1.1",
+                    "description": "HMD: NAVIGATE TO Comm Tower at (N,20)"
+                }
+            ]
+        },
+        {
+            "step_number": "2",
+            "description": "Inspect Comm Tower Worksite",
+            "sub_steps": [
+                {
+                    "step_number": "2.1",
+                    "description": "EVs notify LMCC1 starting inspection procedure"
+                },
+                {
+                    "step_number": "2.2",
+                    "description": "EV1 scan Comm tower, EV2 scan MMRTG for possible issues"
+                },
+                {
+                    "step_number": "2.3",
+                    "description": "If issue found, notify LMCC1 Note: Each EV will be receiving procedures from their LMCC."
+                },
+                {
+                    "step_number": "2.4",
+                    "description": "If EVs do not have a procedure for the issue, standby until LMCCx sends new procedure"
+                },
+                {
+                    "step_number": "2.5",
+                    "description": "Execute appropriate procedure"
+                }
+            ]
+        },
+        {
+            "step_number": "3",
+            "description": "Cable Repair",
+            "sub_steps": [
+                {
+                    "step_number": "3.1",
+                    "description": "COMM Tower Screen: EV1 Select Gear icon"
+                },
+                {
+                    "step_number": "3.2",
+                    "description": "COMM Tower Screen: EV1 Select Shutdown"
+                },
+                {
+                    "step_number": "3.3",
+                    "description": "COMM Tower Screen: EV1 Verify shutdown complete and notify EV2 and LMCC1"
+                },
+                {
+                    "step_number": "3.4",
+                    "description": "MMRTG: EV2 Move POWER – OFF, notify EV1 and LMCC1"
+                },
+                {
+                    "step_number": "3.5",
+                    "description": "EV2 Navigate to Comm Tower to retrieve one end of power cable"
+                },
+                {
+                    "step_number": "3.6",
+                    "description": "Tool box: EV1 Retrieve spare cable"
+                },
+                {
+                    "step_number": "3.7",
+                    "description": "EV2 take appropriate end of cable to MMRTG, notify EV1 and LMCC1 when at MMRTG"
+                },
+                {
+                    "step_number": "3.8",
+                    "description": "Comm Tower: EV1 Disconnect damaged cable from Comm Tower, notify EV2 and LMCC1"
+                },
+                {
+                    "step_number": "3.9",
+                    "description": "MMRTG: EV2 Disconnect damaged cable from MMRTG, notify EV1 and LMCC1"
+                },
+                {
+                    "step_number": "3.10",
+                    "description": "Comm Tower: EV1 Connect new cable from Comm Tower, notify EV2 and LMCC1"
+                },
+                {
+                    "step_number": "3.11",
+                    "description": "MMRTG: EV2 Connect new cable from MMRTG, notify EV1 and LMCC1"
+                },
+                {
+                    "step_number": "3.12",
+                    "description": "MMRTG: EV2 Move POWER – ON, notify EV1 and LMCC1"
+                },
+                {
+                    "step_number": "3.13",
+                    "description": "Comm Tower: EV1 POWER – ON, notify EV2 and LMCC1"
+                },
+                {
+                    "step_number": "3.14",
+                    "description": "Comm Tower: EV1 when start up complete, notify EV2 and LMCC1"
+                },
+                {
+                    "step_number": "3.15",
+                    "description": "Comm Tower Screen: EV1 Verify channel “B” is operational, notify EV2 and LMCC1"
+                },
+                {
+                    "step_number": "3.16",
+                    "description": "ALL DCU+LMCC: On LMCC1 Go, switch to COM – B"
+                },
+                {
+                    "step_number": "3.17",
+                    "description": "ALL DCU+LMCC: Perform comm check"
+                },
+                {
+                    "step_number": "3.18",
+                    "description": "ALL DCU+LMCC: If Comm good, EV1/LMCC1 switch back to COM-A, EV2/LMCC2 continue COM-B, Else all to COM – A"
+                }
+            ]
+        },
+        {
+            "description": "Stations"
+        },
+        {
+            "step_number": "1",
+            "description": "Navigation",
+            "sub_steps": [
+                {
+                    "step_number": "1.1",
+                    "description": "HMD: EV1 NAVIGATE TO Stations A, B, C"
+                },
+                {
+                    "step_number": "1.2",
+                    "description": "HMD: EV2 NAVIGATE TO Stations D, E, F"
+                }
+            ]
+        },
+        {
+            "step_number": "2",
+            "description": "Geologic Sampling",
+            "sub_steps": [
+                {
+                    "step_number": "2.1",
+                    "description": "Once EVs have arrived at worksite, LMCCx will provide information to EVx on where to search (3 locations)"
+                },
+                {
+                    "step_number": "2.2",
+                    "description": "On go from LMCCx, EVx navigate to Station x"
+                },
+                {
+                    "step_number": "2.3",
+                    "description": "EVx, perform Scan and Sampling procedure at designated Station"
+                },
+                {
+                    "step_number": "2.4",
+                    "description": "EVx navigate to Station x"
+                },
+                {
+                    "step_number": "2.5",
+                    "description": "EVx perform Scan and Sampling procedure at designated Station"
+                },
+                {
+                    "step_number": "2.6",
+                    "description": "EVx navigate to Station x"
+                },
+                {
+                    "step_number": "2.7",
+                    "description": "EVx, perform Scan and Sampling procedure at designated Station"
+                }
+            ]
+        },
+        {
+            "step_number": "3",
+            "description": "Sampling Procedure",
+            "sub_steps": [
+                {
+                    "step_number": "3.1",
+                    "description": "HMD: EV Open Sampling Procedure"
+                },
+                {
+                    "step_number": "3.2",
+                    "description": "HMD: If available, perform Field Notes on Rock, which can include picture, voice notes, etc."
+                },
+                {
+                    "step_number": "3.3",
+                    "description": "HMD: Perform XRF Scan"
+                },
+                {
+                    "step_number": "3.4",
+                    "description": "XRF: Press and HOLD trigger"
+                },
+                {
+                    "step_number": "3.5",
+                    "description": "XRF: Aim close to sample until beep, then release trigger"
+                },
+                {
+                    "step_number": "3.6",
+                    "description": "HMD: If Rock Composition outside of nominal parameters (define), collect rock."
+                },
+                {
+                    "step_number": "3.7",
+                    "description": "HMD: If able, drop and label a pin"
+                }
+            ]
+        },
+        {
+            "step_number": "4",
+            "description": "Rover Procedure",
+            "sub_steps": [
+                {
+                    "step_number": "4.1",
+                    "description": "After rover location is obtained, LMCC2 command rover to worksite G (up the hill)"
+                },
+                {
+                    "step_number": "4.2",
+                    "description": "Once at worksite G, LMCC2 collect samples (via QR code)"
+                },
+                {
+                    "step_number": "4.3",
+                    "description": "Once samples collected, LMCC2 command rover to a rendezvous point and notify EV2"
+                },
+                {
+                    "step_number": "4.4",
+                    "description": "Once the rover and EV2 are at the rendezvous site, EV2 collect samples from rover"
+                }
+            ]
+        },
+        {
+            "description": "EVA Ingress"
+        },
+        {
+            "step_number": "1",
+            "description": "Connect UIA to DCU and start Depress",
+            "sub_steps": [
+                {
+                    "step_number": "1.1",
+                    "description": "UIA and DCU: EV1 and EV2 connect UIA and DCU umbilical"
+                },
+                {
+                    "step_number": "1.2",
+                    "description": "UIA: EV-1, EV-2 EMU PWR – ON"
+                },
+                {
+                    "step_number": "1.3",
+                    "description": "BOTH DCU: BATT – UMB"
+                }
+            ]
+        },
+        {
+            "step_number": "2",
+            "description": "Vent O2 Tanks",
+            "sub_steps": [
+                {
+                    "step_number": "2.1",
+                    "description": "UIA: OXYGEN O2 VENT – OPEN"
+                },
+                {
+                    "step_number": "2.2",
+                    "description": "HMD: Wait until both Primary and Secondary OXY tanks are < 10psi"
+                },
+                {
+                    "step_number": "2.3",
+                    "description": "UIA: OXYGEN O2 VENT – CLOSE"
+                }
+            ]
+        },
+        {
+            "step_number": "3",
+            "description": "Empty Water Tanks",
+            "sub_steps": [
+                {
+                    "step_number": "3.1",
+                    "description": "BOTH DCU: PUMP – OPEN"
+                },
+                {
+                    "step_number": "3.2",
+                    "description": "UIA: EV-1, EV-2 WASTE WATER – OPEN"
+                },
+                {
+                    "step_number": "3.3",
+                    "description": "HMD: Wait until water EV1 and EV2 Coolant tank is < 5%"
+                },
+                {
+                    "step_number": "3.4",
+                    "description": "UIA: EV-1, EV-2 WASTE WATER – CLOSE"
+                }
+            ]
+        },
+        {
+            "step_number": "4",
+            "description": "Disconnect UIA from DCU",
+            "sub_steps": [
+                {
+                    "step_number": "4.1",
+                    "description": "UIA: EV-1, EV-2 EMU PWR – OFF"
+                },
+                {
+                    "step_number": "4.2",
+                    "description": "DCU: EV1 and EV2 disconnect umbilical"
                 }
             ]
         }

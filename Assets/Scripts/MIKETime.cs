@@ -16,6 +16,6 @@ public class MIKETime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        value.SetValue(TimeSpan.FromSeconds(TSSManager.Main.EVATime).Hours + ":" + TimeSpan.FromSeconds(TSSManager.Main.EVATime).Minutes + ":" + TimeSpan.FromSeconds(TSSManager.Main.EVATime).Seconds, MIKEResources.Main.PositiveNotificationColor);
+        value.SetValue(TimeSpan.FromSeconds(TSSManager.Main.EVATime).Hours.ToString("00") + ":" + TimeSpan.FromSeconds(TSSManager.Main.EVATime).Minutes.ToString("00") + ":" + TimeSpan.FromSeconds(TSSManager.Main.EVATime).Seconds.ToString("00"), MIKEResources.Main.PositiveNotificationColor);
     }
 }

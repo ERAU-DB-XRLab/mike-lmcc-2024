@@ -19,6 +19,11 @@ public class ScienceScreen : LMCCScreen
     void Start()
     {
         TSSManager.Main.OnSpecUpdated += UpdateSpec;
+
+        foreach (MIKESpecBlock block in specBlocks)
+        {
+            block.ExpandedFade.Display(false);
+        }
     }
 
     void OnEnable()

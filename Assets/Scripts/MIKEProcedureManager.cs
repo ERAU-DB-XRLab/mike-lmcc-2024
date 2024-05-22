@@ -25,7 +25,7 @@ public class MIKEProcedureManager : MonoBehaviour
 
     public static MIKEProcedureManager Main { get; private set; }
 
-    public Dictionary<string, ProcedureStep> Steps { get; private set; }
+    //public Dictionary<string, ProcedureStep> Steps { get; private set; }
     public List<ProcedureStep> StepList { get; private set; }
     public ProcedureStep CurrentStep { get { return StepList[CurrentStepNum]; } }
     public int CurrentStepNum { get; private set; }
@@ -47,7 +47,7 @@ public class MIKEProcedureManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Steps = new Dictionary<string, ProcedureStep>();
+        //Steps = new Dictionary<string, ProcedureStep>();
         StepList = new List<ProcedureStep>();
 
         UIAStatuses = new Dictionary<UIAType, UIAStatus>()
@@ -81,7 +81,7 @@ public class MIKEProcedureManager : MonoBehaviour
         UIAStatuses[UIAType.O2_VENT].Active = data.oxy_vent;
         UIAStatuses[UIAType.DEPRESS_PUMP].Active = data.depress;
 
-        CheckForCompletedSteps();
+        //CheckForCompletedSteps();
     }
 
     private void CheckForCompletedSteps()
@@ -141,19 +141,19 @@ public class MIKEProcedureManager : MonoBehaviour
             {
                 foreach (ProcedureStep step in rootObject.steps)
                 {
-                    Steps.Add(step.step_number, step);
+                    //Steps.Add(step.step_number, step);
                     StepList.Add(step);
                     if (step.sub_steps != null)
                     {
                         foreach (ProcedureStep subStep in step.sub_steps)
                         {
-                            Steps.Add(subStep.step_number, subStep);
+                            //Steps.Add(subStep.step_number, subStep);
                             StepList.Add(subStep);
                             if (subStep.sub_steps != null)
                             {
                                 foreach (ProcedureStep subSubStep in subStep.sub_steps)
                                 {
-                                    Steps.Add(subSubStep.step_number, subSubStep);
+                                    //Steps.Add(subSubStep.step_number, subSubStep);
                                     StepList.Add(subSubStep);
                                 }
                             }

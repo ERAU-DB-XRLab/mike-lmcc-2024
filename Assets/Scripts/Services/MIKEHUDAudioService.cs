@@ -16,6 +16,7 @@ public class MIKEHUDAudioService : MIKEService
 
     public override void ReceiveData(MIKEPacket packet)
     {
+        Debug.Log("Audio received");
         float[] samples = new float[Mathf.CeilToInt(packet.UnreadByteArray.Length / 4f)];
         for (int i = 0; i < samples.Length; i++)
         {
